@@ -1,0 +1,38 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isAdmin() {
+      return request.auth != null && 
+             request.auth.token.email != null &&
+             exists(/databases/$(database)/documents/admins/$(request.auth.token.email));
+    }
+
+    // Admins collection: Only admins can read/write other admin records
+    match /admins/{email} {
+      allow read, write: if isAdmin();
+    }
+
+    // Messages collection: Only admins can read/write messages
+    match /messages/{messageId} {
+      allow read, write: if isAdmin();
+    }
+
+    // CV Downloads collection: Only admins can read download records
+    match /cvDownloads/{downloadId} {
+      allow read, write: if isAdmin();
+    }
+
+    // Site Content collection: Public read, admin write
+    match /siteContent/{document} {
+      allow get: if true;
+      allow list: if true;
+      allow write: if isAdmin();
+    }
+
+    // All other collections (projects, skills, etc.): Public read, admin write
+    match /{collection}/{document=**} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+  }
+}

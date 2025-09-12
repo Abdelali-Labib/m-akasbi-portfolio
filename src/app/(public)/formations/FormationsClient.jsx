@@ -4,17 +4,16 @@ import {
   FaGraduationCap, 
   FaUniversity, 
   FaCertificate, 
-  FaAward,
-  FaChevronDown
+  FaAward
 } from "react-icons/fa";
 import { useInView } from "react-intersection-observer";
 import AnimatedItem from "@/components/ui/AnimatedItem";
 import HeroSection from "@/components/ui/HeroSection";
 
 /**
- * Individual timeline item for education/formation entries
+ * Formation card component without toggle functionality
  */
-const TimelineItem = ({ formation, index, isOpen, onToggle }) => {
+const FormationCard = ({ formation, index }) => {
   // Animation trigger when item comes into view
   const { ref, inView } = useInView({
     triggerOnce: true,
@@ -22,88 +21,57 @@ const TimelineItem = ({ formation, index, isOpen, onToggle }) => {
   });
 
   // Map formation types to appropriate icons
-  const getIcon = (type) => {
-    if (!type) return FaCertificate;
-    const lowerType = type.toLowerCase();
-    if (lowerType.includes('master')) return FaGraduationCap;
-    if (lowerType.includes('licence')) return FaUniversity;
-    if (lowerType.includes('certification')) return FaCertificate;
-    if (lowerType.includes('baccalauréat')) return FaAward;
-    if (lowerType.includes('diplôme universitaire')) return FaUniversity;
+  const getIcon = (formation) => {
+    if (formation.type === 'certificate') return FaCertificate;
+    if (formation.type === 'academic') {
+      const name = (formation.name || '').toLowerCase();
+      if (name.includes('master')) return FaGraduationCap;
+      if (name.includes('licence')) return FaUniversity;
+      if (name.includes('baccalauréat')) return FaAward;
+      if (name.includes('diplôme universitaire')) return FaUniversity;
+      return FaGraduationCap;
+    }
     return FaCertificate;
   };
 
-  const IconComponent = getIcon(formation.name);
+  const IconComponent = getIcon(formation);
 
   return (
     <div 
       ref={ref} 
       className={`group relative transition-all duration-700 ${inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
-      style={{ transitionDelay: `${index * 200}ms` }}
+      style={{ transitionDelay: `${index * 150}ms` }}
     >
-      <div className="relative">
-        <div className="hidden lg:block absolute left-12 top-0 bottom-0 w-0.5 bg-gradient-to-b from-accent/20 via-accent/40 to-accent/20">
-          <div className="absolute inset-0 w-full h-full bg-gradient-to-b from-accent/10 via-accent/20 to-transparent blur-sm" />
-        </div>
-        <div className="lg:hidden absolute left-4 top-0 bottom-0 w-0.5 bg-gradient-to-b from-accent/60 via-accent/40 to-accent/20" />
-        
-        <div className="relative flex flex-col lg:flex-row gap-4 sm:gap-6 lg:gap-12 pl-0 lg:pl-24">
-          <div className="relative z-10 flex items-start justify-start lg:justify-start">
-            <div className="relative">
-              <div className="w-12 h-12 sm:w-14 sm:h-14 lg:w-24 lg:h-24 rounded-xl sm:rounded-2xl lg:rounded-3xl bg-gradient-to-br from-accent via-accent/90 to-accent/80 shadow-lg sm:shadow-xl lg:shadow-2xl flex items-center justify-center group-hover:scale-110 transition-all duration-500 relative overflow-hidden border-2 border-light/20 dark:border-primary/20">
-                <IconComponent className="h-5 w-5 sm:h-6 sm:w-6 lg:h-8 lg:w-8 text-light z-10 relative" />
-                <div className="absolute inset-0 bg-gradient-to-br from-light/20 to-transparent scale-0 group-hover:scale-100 transition-transform duration-700 rounded-2xl lg:rounded-3xl" />
+      <div className="relative overflow-hidden rounded-2xl border border-accent/25 bg-gradient-to-br from-light/98 to-light/92 dark:from-primary/98 dark:to-primary/92 backdrop-blur-sm shadow-lg hover:shadow-xl transition-all duration-500 hover:border-accent/40 group-hover:scale-[1.02]">
+        <div className="p-6 relative">
+          <div className="flex items-start gap-6">
+            <div className="relative flex-shrink-0">
+              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-accent via-accent/90 to-accent/80 shadow-lg flex items-center justify-center group-hover:scale-110 transition-all duration-500 border-2 border-light/20 dark:border-primary/20">
+                <IconComponent className="h-7 w-7 text-light" />
               </div>
-              <div className="absolute -top-4 -right-1 sm:-top-3 sm:-right-2 lg:-top-3 lg:-right-3 px-1.5 py-0.5 sm:px-2 sm:py-1 lg:px-3 lg:py-1.5 bg-gradient-to-r from-accent to-accent/80 rounded-full text-[10px] sm:text-xs font-bold text-light shadow-lg z-20">
+              <div className="absolute -top-2 -right-2 px-2 py-1 bg-gradient-to-r from-accent to-accent/80 rounded-full text-xs font-bold text-light shadow-lg">
                 {formation.year}
               </div>
             </div>
-          </div>
-          
-          <div className="flex-1 min-w-0 ml-4 sm:ml-6 lg:ml-0 relative z-10">
-            <div className="relative overflow-hidden rounded-xl sm:rounded-2xl lg:rounded-3xl border border-accent/25 bg-gradient-to-br from-light/98 to-light/92 dark:from-primary/98 dark:to-primary/92 backdrop-blur-sm shadow-lg sm:shadow-xl lg:shadow-2xl hover:shadow-xl lg:hover:shadow-3xl transition-all duration-700 hover:border-accent/50 group-hover:scale-[1.01] lg:group-hover:scale-[1.02]">
-              <button
-                onClick={onToggle}
-                className="w-full p-4 sm:p-5 lg:p-8 text-left transition-all duration-500 hover:bg-accent/5 dark:hover:bg-primary/90 relative z-10"
-              >
-                <div className="flex items-start justify-between gap-3 sm:gap-4 lg:gap-6">
-                  <div className="flex-1 min-w-0">
-                    <div className="inline-flex items-center gap-2 mb-4">
-                      <span className="px-2 py-1 sm:px-3 sm:py-1.5 lg:px-4 lg:py-2 bg-gradient-to-r from-accent/20 to-accent/10 rounded-lg sm:rounded-xl lg:rounded-2xl border border-accent/30 group-hover:border-accent/50 transition-colors duration-300 text-accent font-semibold text-xs lg:text-sm uppercase tracking-wider">
-                        {formation.name}
-                      </span>
-                    </div>
-                    <h3 className="text-2xl md:text-3xl font-bold text-primary dark:text-light mb-3 leading-tight group-hover:text-accent transition-colors duration-500">
-                      {formation.title}
-                    </h3>
-                    <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-4 text-primary/80 dark:text-light/80">
-                      <FaUniversity className="h-3 w-3 sm:h-4 sm:w-4 lg:h-5 lg:w-5 text-accent/80" />
-                      <span className="text-xs sm:text-sm lg:text-base xl:text-lg font-medium truncate">{formation.institution}</span>
-                    </div>
-                  </div>
-                  <div className={`flex-shrink-0 transform transition-all duration-500 ${isOpen ? 'rotate-180' : ''}`}>
-                    <div className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 rounded-lg sm:rounded-xl lg:rounded-2xl bg-gradient-to-br from-accent/15 to-accent/10 flex items-center justify-center group-hover:bg-accent/25 transition-all duration-500 group-hover:scale-110 border border-accent/25 group-hover:border-accent/40 shadow-lg">
-                      <FaChevronDown className="h-3 w-3 sm:h-4 sm:w-4 lg:h-5 lg:w-5 text-accent" />
-                    </div>
-                  </div>
+            
+            <div className="flex-1 min-w-0">
+              <h3 className="text-xl md:text-2xl font-bold text-primary dark:text-light mb-4 leading-tight group-hover:text-accent transition-colors duration-500">
+                {formation.name || formation.title}
+              </h3>
+              
+              <div className="space-y-3 text-primary/80 dark:text-light/80">
+                <div className="flex items-center gap-2">
+                  <FaUniversity className="h-4 w-4 text-accent/70 flex-shrink-0" />
+                  <span className="text-sm md:text-base font-medium">{formation.institution}</span>
                 </div>
-              </button>
-              <div className={`transition-all duration-700 ease-in-out overflow-hidden ${isOpen ? 'max-h-[400px]' : 'max-h-0'}`}>
-                <div className="border-t border-accent/25 p-4 sm:p-5 lg:p-8 dark:border-accent/35 relative z-10 bg-gradient-to-br from-accent/5 to-transparent">
-                  <p className="text-xs sm:text-sm lg:text-base leading-relaxed text-primary/90 dark:text-light/90">
-                    {formation.description}
-                    {formation.skills && formation.skills.length > 0 && (
-                      <div className="mt-4">
-                        <h4 className="text-sm sm:text-base font-bold text-primary dark:text-light mb-2">Compétences</h4>
-                        <ul className="flex flex-wrap gap-2">
-                          {formation.skills.map((skill, index) => (
-                            <li key={index} className="bg-accent/10 text-accent text-xs sm:text-sm font-medium rounded-full px-2 py-1">{skill}</li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-                  </p>
-                </div>
+                
+                {formation.speciality && (
+                  <div className="flex items-start gap-2">
+                    <span className="text-sm md:text-base text-primary/60 dark:text-light/60 font-medium min-w-0">
+                      <span className="text-accent font-semibold">Spécialité:</span> {formation.speciality}
+                    </span>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -114,10 +82,20 @@ const TimelineItem = ({ formation, index, isOpen, onToggle }) => {
 };
 
 const FormationsClient = ({ formations }) => {
-  const [openIndex, setOpenIndex] = useState(null);
+  const [activeTab, setActiveTab] = useState('academic');
 
-  const handleToggle = (index) => {
-    setOpenIndex(openIndex === index ? null : index);
+  // Filter formations by type
+  const academicFormations = formations.filter(f => f.type === 'academic').sort((a, b) => (b.year || 0) - (a.year || 0));
+  const certifications = formations.filter(f => f.type === 'certificate').sort((a, b) => (b.year || 0) - (a.year || 0));
+
+  const handleTabKey = (e) => {
+    const order = ['academic', 'certificate'];
+    const idx = order.indexOf(activeTab);
+    if (e.key === 'ArrowRight') {
+      setActiveTab(order[(idx + 1) % order.length]);
+    } else if (e.key === 'ArrowLeft') {
+      setActiveTab(order[(idx - 1 + order.length) % order.length]);
+    }
   };
 
   return (
@@ -134,26 +112,72 @@ const FormationsClient = ({ formations }) => {
           <AnimatedItem delay={200}>
             <div className="text-center mb-16 lg:mb-24">
               <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-primary dark:text-light mb-6 lg:mb-8">
-                Mon <span className="text-accent">Parcours</span> Chronologique
+                Mon <span className="text-accent">Parcours</span> Éducatif
               </h2>
-              <p className="text-base lg:text-lg leading-relaxed text-primary/80 dark:text-light/80 mb-4">
-                De mes débuts académiques à mes spécialisations actuelles, découvrez les étapes clés de mon évolution professionnelle.
+              <p className="text-lg sm:text-xl lg:text-2xl leading-relaxed text-primary/80 dark:text-light/80 max-w-3xl lg:max-w-4xl mx-auto mb-8 lg:mb-10 px-4">
+                Découvrez mon parcours académique et mes certifications professionnelles.
               </p>
               <div className="w-24 sm:w-32 lg:w-40 h-1 lg:h-1.5 bg-gradient-to-r from-accent/30 via-accent to-accent/30 rounded-full mx-auto" />
             </div>
           </AnimatedItem>
           
-          <div className="space-y-8 lg:space-y-16 relative">
-            {formations.map((formation, index) => (
-              <TimelineItem
-                key={formation.id}
-                formation={formation}
-                index={index}
-                isOpen={openIndex === index}
-                onToggle={() => handleToggle(index)}
-              />
-            ))}
+          <div
+            role="tablist"
+            aria-label="Formation Tabs"
+            className="mx-auto mb-10 lg:mb-12 flex w-full max-w-3xl md:justify-center rounded-2xl border border-accent/20 bg-gradient-to-br from-light/80 to-light/70 dark:from-primary/80 dark:to-primary/70 backdrop-blur-sm overflow-x-auto md:overflow-visible whitespace-nowrap md:whitespace-normal"
+            onKeyDown={handleTabKey}
+          >
+            <button
+              role="tab"
+              aria-selected={activeTab === 'academic'}
+              tabIndex={activeTab === 'academic' ? 0 : -1}
+              onClick={() => setActiveTab('academic')}
+              className={`flex-none w-1/2 sm:w-auto md:flex-1 px-4 py-3 lg:px-6 lg:py-4 text-sm lg:text-base font-semibold transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 ${
+                activeTab === 'academic'
+                  ? 'text-light bg-accent'
+                  : 'text-primary/80 dark:text-light/80 hover:bg-accent/10'
+              }`}
+            >
+              Parcours Académique
+            </button>
+            <button
+              role="tab"
+              aria-selected={activeTab === 'certificate'}
+              tabIndex={activeTab === 'certificate' ? 0 : -1}
+              onClick={() => setActiveTab('certificate')}
+              className={`flex-none w-1/2 sm:w-auto md:flex-1 px-4 py-3 lg:px-6 lg:py-4 text-sm lg:text-base font-semibold transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 border-l border-accent/20 ${
+                activeTab === 'certificate'
+                  ? 'text-light bg-accent'
+                  : 'text-primary/80 dark:text-light/80 hover:bg-accent/10'
+              }`}
+            >
+              Certifications
+            </button>
           </div>
+
+          {activeTab === 'academic' && (
+            <div role="tabpanel" aria-labelledby="tab-academic" className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
+              {academicFormations.map((formation, index) => (
+                <FormationCard
+                  key={formation.id}
+                  formation={formation}
+                  index={index}
+                />
+              ))}
+            </div>
+          )}
+          
+          {activeTab === 'certificate' && (
+            <div role="tabpanel" aria-labelledby="tab-certificate" className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
+              {certifications.map((formation, index) => (
+                <FormationCard
+                  key={formation.id}
+                  formation={formation}
+                  index={index}
+                />
+              ))}
+            </div>
+          )}
         </div>
       </section>
     </>

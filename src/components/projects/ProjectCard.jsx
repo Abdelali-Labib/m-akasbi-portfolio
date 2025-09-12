@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { useInView } from "react-intersection-observer";
 import { FaVideo, FaPlay, FaImages, FaCode } from "react-icons/fa";
 
@@ -12,11 +12,23 @@ import { FaVideo, FaPlay, FaImages, FaCode } from "react-icons/fa";
  * @param {number} index - Card index for staggered animations
  */
 const ProjectCard = ({ project, type, onClick, index, content = {} }) => {
+  const [imageError, setImageError] = useState(false);
+  const [imageLoading, setImageLoading] = useState(true);
+  
   // Animation trigger when card comes into view
   const { ref, inView } = useInView({
     triggerOnce: true,
     threshold: 0.2,
   });
+
+  const handleImageError = () => {
+    setImageError(true);
+    setImageLoading(false);
+  };
+
+  const handleImageLoad = () => {
+    setImageLoading(false);
+  };
 
   // Default content fallbacks
   const defaultContent = {
@@ -91,12 +103,37 @@ const ProjectCard = ({ project, type, onClick, index, content = {} }) => {
         
         <div className="relative z-10">
           <div className="relative h-48 w-full overflow-hidden">
-            {project.thumbnail && (
-              <img
-                src={project.thumbnail}
-                alt={project.title}
-                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-              />
+            {(project.thumbnail || project.img) ? (
+              imageError ? (
+                <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-900">
+                  <div className="text-center">
+                    <FaImages className="mx-auto h-12 w-12 text-gray-400 dark:text-gray-600 mb-2" />
+                    <p className="text-sm text-gray-500 dark:text-gray-400">Image non disponible</p>
+                  </div>
+                </div>
+              ) : (
+                <>
+                  {imageLoading && (
+                    <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-900">
+                      <div className="animate-spin h-8 w-8 border-2 border-accent border-t-transparent rounded-full"></div>
+                    </div>
+                  )}
+                  <img
+                    src={project.thumbnail || project.img}
+                    alt={project.title}
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    onError={handleImageError}
+                    onLoad={handleImageLoad}
+                  />
+                </>
+              )
+            ) : (
+              <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-900">
+                <div className="text-center">
+                  <FaImages className="mx-auto h-12 w-12 text-gray-400 dark:text-gray-600 mb-2" />
+                  <p className="text-sm text-gray-500 dark:text-gray-400">Aucune image</p>
+                </div>
+              </div>
             )}
             
             {/* Overlay */}

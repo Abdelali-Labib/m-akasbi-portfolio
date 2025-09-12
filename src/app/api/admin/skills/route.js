@@ -1,5 +1,7 @@
 import FirestoreService from '@/lib/firestore-service';
 import { dbAdmin } from '@/lib/firebase-admin';
+import { isAdmin } from '@/lib/firestore-admin';
+import { headers } from 'next/headers';
 
 export async function GET() {
   try {
@@ -14,6 +16,14 @@ export async function GET() {
 
 export async function POST(request) {
   try {
+    // Check authentication
+    const headersList = await headers();
+    const authorization = headersList.get('authorization');
+    
+    if (!authorization) {
+      return Response.json({ success: false, error: 'Authentication required' }, { status: 401 });
+    }
+
     const data = await request.json();
     const docRef = await dbAdmin.collection('skills').add({
       ...data,
@@ -30,6 +40,14 @@ export async function POST(request) {
 
 export async function PUT(request) {
   try {
+    // Check authentication
+    const headersList = await headers();
+    const authorization = headersList.get('authorization');
+    
+    if (!authorization) {
+      return Response.json({ success: false, error: 'Authentication required' }, { status: 401 });
+    }
+
     const { id, ...data } = await request.json();
     await dbAdmin.collection('skills').doc(id).update({
       ...data,
@@ -45,6 +63,14 @@ export async function PUT(request) {
 
 export async function DELETE(request) {
   try {
+    // Check authentication
+    const headersList = await headers();
+    const authorization = headersList.get('authorization');
+    
+    if (!authorization) {
+      return Response.json({ success: false, error: 'Authentication required' }, { status: 401 });
+    }
+
     const { searchParams } = new URL(request.url);
     const id = searchParams.get('id');
     

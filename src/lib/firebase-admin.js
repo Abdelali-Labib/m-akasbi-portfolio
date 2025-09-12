@@ -1,15 +1,22 @@
 import admin from 'firebase-admin';
 
-if (!admin.apps.length) {
-  try {
-    const serviceAccount = JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT_JSON);
-    admin.initializeApp({
-      credential: admin.credential.cert(serviceAccount),
-    });
-  } catch (error) {
-    
+let dbAdmin = null;
+
+try {
+  if (!admin.apps.length) {
+    const raw = process.env.GOOGLE_SERVICE_ACCOUNT_JSON;
+    if (raw) {
+      const serviceAccount = JSON.parse(raw);
+      admin.initializeApp({
+        credential: admin.credential.cert(serviceAccount),
+      });
+    }
   }
+  if (admin.apps.length) {
+    dbAdmin = admin.firestore();
+  }
+} catch (_) {
+  dbAdmin = null;
 }
 
-const dbAdmin = admin.firestore();
 export { dbAdmin };

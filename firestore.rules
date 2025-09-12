@@ -29,6 +29,12 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
+    // Analytics collection: Public can write, admins can read
+    match /analytics/{document=**} {
+      allow read: if isAdmin();
+      allow write: if true;
+    }
+
     // All other collections (projects, skills, etc.): Public read, admin write
     match /{collection}/{document=**} {
       allow read: if true;

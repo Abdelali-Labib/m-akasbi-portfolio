@@ -23,7 +23,8 @@ import {
 } from 'react-icons/fi';
 import { useAuth } from '@/Providers/AuthContext';
 import { useTheme } from 'next-themes';
-import ThemeToggle from './ThemeToggle';
+import useUnreadMessages from '@/hooks/useUnreadMessages';
+import ThemeToggle from './ui/ThemeToggle';
 
 const ModernAdminLayout = ({ children, activeSection, onSectionChange }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -31,6 +32,7 @@ const ModernAdminLayout = ({ children, activeSection, onSectionChange }) => {
   const { theme, setTheme } = useTheme();
   const router = useRouter();
   const searchParams = useSearchParams();
+  const unreadCount = useUnreadMessages();
 
   // Handle section persistence with URL params
   useEffect(() => {
@@ -57,14 +59,14 @@ const ModernAdminLayout = ({ children, activeSection, onSectionChange }) => {
   };
 
   const menuItems = [
-    { id: 'overview', label: 'Tableau de Bord', icon: FiHome },
+    { id: 'dashboard', label: 'Tableau de Bord', icon: FiHome },
     { id: 'messages', label: 'Messages', icon: FiMail },
-    { id: 'experiences', label: 'Expériences', icon: FiBriefcase },
+    { id: 'generalContent', label: 'Géneral', icon: FiGlobe },
     { id: 'formations', label: 'Formations', icon: FiBookOpen },
-    { id: 'projects', label: 'Projets', icon: FiFolder },
     { id: 'skills', label: 'Compétences', icon: FiSettings },
+    { id: 'experiences', label: 'Expériences', icon: FiBriefcase },
+    { id: 'projects', label: 'Projets', icon: FiFolder },
     { id: 'contactInfo', label: 'Coordonnées', icon: FiUser },
-    { id: 'siteContent', label: 'Contenu du Site', icon: FiGlobe },
     { id: 'cloudinary', label: 'Fichiers', icon: FiCloud },
   ];
 
@@ -76,7 +78,7 @@ const ModernAdminLayout = ({ children, activeSection, onSectionChange }) => {
       className={`w-full flex items-center gap-3 py-3 px-4 text-left transition-colors rounded-lg ${
         isActive
           ? 'bg-accent text-white'
-          : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
+          : 'text-primary/70 dark:text-light/70 hover:bg-primary/10 dark:hover:bg-light/10'
       }`}
     >
       <item.icon className="w-5 h-5" />
@@ -99,12 +101,19 @@ const ModernAdminLayout = ({ children, activeSection, onSectionChange }) => {
         sidebarOpen ? 'translate-x-0' : '-translate-x-full'
       } lg:translate-x-0`}>
         {/* Sidebar Header */}
-        <div className="p-6 border-b border-gray-200 dark:border-gray-800">
+        <div className="px-5 py-5">
           <div className="flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-primary dark:text-light">Admin Panel</h2>
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-gradient-to-br from-accent to-accent/80 rounded-xl flex items-center justify-center shadow-lg">
+                <FiBarChart className="w-5 h-5 text-white" />
+              </div>
+              <div>
+                <h2 className="text-lg font-bold text-primary dark:text-light">Administration</h2>
+              </div>
+            </div>
             <button
               onClick={() => setSidebarOpen(false)}
-              className="lg:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+              className="lg:hidden p-2 rounded-lg hover:bg-primary/10 dark:hover:bg-light/10 transition-colors"
             >
               <FiX className="w-5 h-5 text-gray-500" />
             </button>
@@ -113,7 +122,7 @@ const ModernAdminLayout = ({ children, activeSection, onSectionChange }) => {
 
         {/* Navigation Menu */}
         <nav className="flex-1 p-4 overflow-y-auto">
-          <div className="space-y-2">
+          <div className="space-y-1">
             {menuItems.map((item) => (
               <MenuItem
                 key={item.id}
@@ -145,7 +154,7 @@ const ModernAdminLayout = ({ children, activeSection, onSectionChange }) => {
             <div className="flex items-center gap-4">
               <button
                 onClick={() => setSidebarOpen(true)}
-                className="lg:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                className="lg:hidden p-2 rounded-lg hover:bg-primary/10 dark:hover:bg-light/10 transition-colors"
               >
                 <FiMenu className="w-5 h-5 text-gray-600 dark:text-gray-400" />
               </button>
@@ -161,12 +170,22 @@ const ModernAdminLayout = ({ children, activeSection, onSectionChange }) => {
               </div>
             </div>
             <div className="flex items-center gap-4">
+              <button
+                onClick={() => handleSectionChange('messages')}
+                className="relative p-2 rounded-lg hover:bg-primary/10 dark:hover:bg-light/10 transition-colors"
+                aria-label={`Voir les messages. ${unreadCount} non lus`}
+              >
+                <FiMail className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+                {unreadCount > 0 && (
+                                    <span className="absolute top-0 right-0 h-5 min-w-[1.25rem] px-1 rounded-full bg-red-500 text-white text-xs flex items-center justify-center font-bold">
+                    {unreadCount}
+                  </span>
+                )}
+              </button>
+
               {/* User Info */}
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 bg-accent/10 rounded-lg flex items-center justify-center">
-                  <FiMail className="w-4 h-4 text-accent" />
-                </div>
-                <div className="hidden sm:block">
+              <div className="hidden sm:flex items-center gap-3">
+                <div className="text-right">
                   <p className="text-sm font-medium text-primary dark:text-light">{user?.displayName || 'Admin'}</p>
                   <p className="text-xs text-gray-500 dark:text-gray-400">{user?.email}</p>
                 </div>

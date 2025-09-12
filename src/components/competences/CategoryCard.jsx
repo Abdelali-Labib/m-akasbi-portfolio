@@ -62,9 +62,6 @@ const CategoryCard = ({ section, index, isActive, onClick }) => {
           {/* Text */}
           <div className="text-left flex-1">
             <h3 className="font-bold text-lg sm:text-xl lg:text-2xl">{section.name}</h3>
-            <p className={`text-sm sm:text-base ${isActive ? "text-light/80" : "text-primary/70 dark:text-light/70"}`}>
-              {section.data.length} compétences
-            </p>
           </div>
           
           {/* Arrow */}

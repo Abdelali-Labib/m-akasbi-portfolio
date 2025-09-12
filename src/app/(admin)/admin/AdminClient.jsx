@@ -4,29 +4,32 @@ import React, { useEffect, useState } from 'react';
 import { useAuth } from '@/Providers/AuthContext';
 import { useRouter, useSearchParams } from 'next/navigation';
 import ModernAdminLayout from '@/components/admin/ModernAdminLayout';
-import EnhancedDashboard from '@/components/admin/EnhancedDashboard';
-import ManageMessages from '@/components/admin/ManageMessages';
-import ManageExperiences from '@/components/admin/ManageExperiences';
-import ManageFormations from '@/components/admin/ManageFormations';
-import ManageProjects from '@/components/admin/ManageProjects';
-import ManageSkills from '@/components/admin/ManageSkills';
-import ManageContactInfo from '@/components/admin/ManageContactInfo';
-import ManageSiteContent from '@/components/admin/ManageSiteContent';
-import ManageCloudinary from '@/components/admin/ManageCloudinary';
+import EnhancedAnalyticsDashboard from '@/components/admin/analytics/EnhancedAnalyticsDashboard';
+import ManageMessages from '@/components/admin/management/ManageMessages';
+import ManageExperiences from '@/components/admin/management/ManageExperiences';
+import ManageFormations from '@/components/admin/management/ManageFormations';
+import ManageProjects from '@/components/admin/management/ManageProjects';
+import ManageSkills from '@/components/admin/management/ManageSkills';
+import ManageContactInfo from '@/components/admin/management/ManageContactInfo';
+import ManageSiteContent from '@/components/admin/management/ManageSiteContent';
+import ManageCloudinary from '@/components/admin/management/ManageCloudinary';
 
-const AdminClient = () => {
+const AdminClient = ({ analyticsData }) => {
   const { user, loading, isAdmin } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [activeSection, setActiveSection] = useState('overview');
+  const [activeSection, setActiveSection] = useState('dashboard');
 
   // Initialize section from URL params on mount
   useEffect(() => {
     const section = searchParams.get('section');
     if (section) {
       setActiveSection(section);
+    } else {
+      // Redirect to dashboard if no section is specified
+      router.push('/admin?section=dashboard');
     }
-  }, [searchParams]);
+  }, [searchParams, router]);
 
   useEffect(() => {
     if (!loading && (!user || !isAdmin)) {
@@ -36,8 +39,8 @@ const AdminClient = () => {
 
   const renderContent = () => {
     switch (activeSection) {
-      case 'overview':
-        return <EnhancedDashboard />;
+      case 'dashboard':
+        return <EnhancedAnalyticsDashboard analyticsData={analyticsData} />;
       case 'messages':
         return <ManageMessages />;
       case 'experiences':
@@ -50,12 +53,12 @@ const AdminClient = () => {
         return <ManageSkills />;
       case 'contactInfo':
         return <ManageContactInfo />;
-      case 'siteContent':
+      case 'generalContent':
         return <ManageSiteContent />;
       case 'cloudinary':
         return <ManageCloudinary />;
       default:
-        return <EnhancedDashboard />;
+        return <EnhancedAnalyticsDashboard analyticsData={analyticsData} />;
     }
   };
 

@@ -19,10 +19,22 @@ import HeroSection from "@/components/ui/HeroSection";
 import ProjectCard from "@/components/projects/ProjectCard";
 
 const CreativeImageCard = ({ image, index, onClick }) => {
+  const [imageError, setImageError] = useState(false);
+  const [imageLoading, setImageLoading] = useState(true);
+  
   const { ref, inView } = useInView({
     triggerOnce: true,
     threshold: 0.2,
   });
+
+  const handleImageError = () => {
+    setImageError(true);
+    setImageLoading(false);
+  };
+
+  const handleImageLoad = () => {
+    setImageLoading(false);
+  };
 
   return (
     <div 
@@ -33,11 +45,29 @@ const CreativeImageCard = ({ image, index, onClick }) => {
       <div className="relative overflow-hidden rounded-3xl border border-accent/20 bg-gradient-to-br from-light/95 to-light/90 dark:from-primary/95 dark:to-primary/90 backdrop-blur-sm shadow-xl hover:shadow-2xl transition-all duration-700 hover:border-accent/40 group-hover:scale-[1.03] cursor-pointer" onClick={onClick}>
         <div className="relative z-10">
           <div className="relative h-64 w-full overflow-hidden">
-            <img
-              src={image.img}
-              alt={image.description}
-              className="w-full h-full object-cover transition-all duration-700 group-hover:scale-110 group-hover:rotate-1"
-            />
+            {imageError ? (
+              <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-900">
+                <div className="text-center">
+                  <FaImages className="mx-auto h-12 w-12 text-gray-400 dark:text-gray-600 mb-2" />
+                  <p className="text-sm text-gray-500 dark:text-gray-400">Image non disponible</p>
+                </div>
+              </div>
+            ) : (
+              <>
+                {imageLoading && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-900">
+                    <div className="animate-spin h-8 w-8 border-2 border-accent border-t-transparent rounded-full"></div>
+                  </div>
+                )}
+                <img
+                  src={image.img}
+                  alt={image.description}
+                  className="w-full h-full object-cover transition-all duration-700 group-hover:scale-110 group-hover:rotate-1"
+                  onError={handleImageError}
+                  onLoad={handleImageLoad}
+                />
+              </>
+            )}
             <div className="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500">
               <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-500">
                 <div className="w-20 h-20 bg-gradient-to-br from-accent/90 to-accent/80 rounded-3xl flex items-center justify-center shadow-2xl group-hover:scale-110 transition-transform duration-500 border border-accent/50">

@@ -61,6 +61,56 @@ export async function GET() {
 }
 
 /**
+ * PATCH - Rename a file in Cloudinary
+ */
+export async function PATCH(request) {
+  try {
+    const { public_id, resource_type, new_name } = await request.json();
+
+    if (!public_id || !resource_type || !new_name) {
+      return NextResponse.json(
+        { error: 'public_id, resource_type et new_name sont requis' },
+        { status: 400 }
+      );
+    }
+
+    // Rename the file using Cloudinary's rename API
+    const result = await cloudinary.uploader.rename(
+      public_id,
+      new_name,
+      { resource_type: resource_type }
+    );
+
+    return NextResponse.json({
+      message: 'Fichier renommé avec succès',
+      result: {
+        public_id: result.public_id,
+        secure_url: result.secure_url
+      }
+    });
+
+  } catch (error) {
+    console.error('Rename error:', error);
+    
+    // Handle specific Cloudinary errors
+    if (error.message && error.message.includes('already exists')) {
+      return NextResponse.json(
+        { error: 'Un fichier avec ce nom existe déjà' },
+        { status: 400 }
+      );
+    }
+    
+    return NextResponse.json(
+      { 
+        error: 'Erreur lors du renommage',
+        details: process.env.NODE_ENV === 'development' ? error.message : undefined
+      },
+      { status: 500 }
+    );
+  }
+}
+
+/**
  * DELETE - Delete a file from Cloudinary
  */
 export async function DELETE(request) {

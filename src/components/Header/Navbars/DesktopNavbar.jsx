@@ -4,7 +4,6 @@ import { links } from "./links";
 import DarkModeToggle from "../DarkModeToggle";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import ThemeProvider from "@/Providers/ThemeProvider";
 import { useNavbarVisibility } from "@/Providers/NavbarVisibilityContext";
 
 const DesktopNavbar = () => {
@@ -64,9 +63,7 @@ const DesktopNavbar = () => {
 
         {/* Enhanced Actions Section */}
         <div className="flex items-center gap-4 lg:gap-6">
-          <ThemeProvider>
-            <DarkModeToggle />
-          </ThemeProvider>
+          <DarkModeToggle />
           
           <Link href="/contact" className={`group relative ${pathname === '/contact' ? 'active-contact' : ''}`}>
             <button className={`relative overflow-hidden rounded-full border-2 transition-all duration-500 font-bold text-sm lg:text-base focus:outline-none focus:ring-2 focus:ring-accent/50 focus:ring-offset-2 focus:ring-offset-light dark:focus:ring-offset-primary ${ 

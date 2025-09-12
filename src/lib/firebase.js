@@ -25,7 +25,8 @@ const db = getFirestore(app);
 const auth = getAuth(app);
 
 let analytics;
-if (typeof window !== 'undefined' && process.env.NODE_ENV === 'production') {
+if (typeof window !== 'undefined') {
+  // Initialize analytics in both development and production for testing
   isSupported().then((supported) => {
     if (supported) {
       analytics = getAnalytics(app);

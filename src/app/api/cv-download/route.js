@@ -1,5 +1,5 @@
-import { db } from '@/lib/firebase';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { dbAdmin } from '@/lib/firebase-admin';
+import admin from 'firebase-admin';
 import { NextResponse } from 'next/server';
 
 /**
@@ -8,13 +8,20 @@ import { NextResponse } from 'next/server';
  */
 export async function POST(request) {
   try {
-    const { userAgent, ip, referrer } = await request.json();
+    const body = await request.json();
+    const { userAgent, referrer } = body;
     
-    // Add download record to Firestore
-    await addDoc(collection(db, 'cvDownloads'), {
-      downloadedAt: serverTimestamp(),
+    // Extract IP from request headers
+    const forwarded = request.headers.get('x-forwarded-for');
+    const ip = forwarded ? forwarded.split(',')[0] : 
+               request.headers.get('x-real-ip') || 
+               'Unknown';
+    
+    // Add download record to Firestore using Admin SDK (server-side reliable)
+    await dbAdmin.collection('cvDownloads').add({
+      downloadedAt: admin.firestore.FieldValue.serverTimestamp(),
       userAgent: userAgent || 'Unknown',
-      ip: ip || 'Unknown',
+      ip: ip,
       referrer: referrer || 'Direct',
       timestamp: new Date().toISOString()
     });
@@ -24,6 +31,7 @@ export async function POST(request) {
       message: 'CV download tracked successfully' 
     });
   } catch (error) {
+    console.error('CV download tracking error:', error);
     return NextResponse.json(
       { error: 'Failed to track CV download' },
       { status: 500 }

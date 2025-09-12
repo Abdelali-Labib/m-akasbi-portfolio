@@ -2,11 +2,25 @@
 
 import Image from "next/image";
 import dynamic from "next/dynamic";
+import { useState } from "react";
+import { FiUser } from "react-icons/fi";
 
 function Picture({ profileInfo = {} }) {
+  const [imageError, setImageError] = useState(false);
+  const [imageLoading, setImageLoading] = useState(true);
+  
   // Use profile picture URL from props, fallback to environment variable if not provided
   const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
   const profilePictureUrl = profileInfo.profilePictureUrl || `https://res.cloudinary.com/${cloudName}/image/upload/picture.png`;
+
+  const handleImageError = () => {
+    setImageError(true);
+    setImageLoading(false);
+  };
+
+  const handleImageLoad = () => {
+    setImageLoading(false);
+  };
 
   return (
     <div className="group relative h-[280px] w-[280px] sm:h-[320px] sm:w-[320px] md:h-[380px] md:w-[380px] lg:h-[420px] lg:w-[420px] xl:h-[480px] xl:w-[480px] animate-fade-in" style={{ perspective: '1000px' }}>
@@ -17,15 +31,33 @@ function Picture({ profileInfo = {} }) {
           <div className="h-full w-full rounded-[1.4rem] bg-gradient-to-br from-white/95 to-white/80 backdrop-blur-md dark:from-primary/95 dark:to-primary/80 sm:rounded-[1.9rem]">
             {/* Image container */}
             <div className="relative h-full w-full overflow-hidden rounded-[1.3rem] p-3 sm:rounded-[1.8rem] sm:p-4">
-              <Image
-                src={profilePictureUrl}
-                priority
-                quality={95}
-                fill
-                sizes="(max-width: 640px) 280px, (max-width: 768px) 320px, (max-width: 1024px) 380px, (max-width: 1280px) 420px, 480px"
-                alt="Mouhcine Akasbi's Picture"
-                className="rounded-[1rem] sm:rounded-[1.5rem] object-cover shadow-inner transition-all duration-500 group-hover:scale-105"
-              />
+              {imageError ? (
+                <div className="flex h-full w-full items-center justify-center rounded-[1rem] sm:rounded-[1.5rem] bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-900">
+                  <div className="text-center">
+                    <FiUser className="mx-auto h-16 w-16 text-gray-400 dark:text-gray-600 mb-2" />
+                    <p className="text-sm text-gray-500 dark:text-gray-400">Image non disponible</p>
+                  </div>
+                </div>
+              ) : (
+                <>
+                  {imageLoading && (
+                    <div className="absolute inset-0 flex items-center justify-center rounded-[1rem] sm:rounded-[1.5rem] bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-900">
+                      <div className="animate-spin h-8 w-8 border-2 border-accent border-t-transparent rounded-full"></div>
+                    </div>
+                  )}
+                  <Image
+                    src={profilePictureUrl}
+                    priority
+                    quality={95}
+                    fill
+                    sizes="(max-width: 640px) 280px, (max-width: 768px) 320px, (max-width: 1024px) 380px, (max-width: 1280px) 420px, 480px"
+                    alt="Mouhcine Akasbi's Picture"
+                    className="rounded-[1rem] sm:rounded-[1.5rem] object-cover shadow-inner transition-all duration-500 group-hover:scale-105"
+                    onError={handleImageError}
+                    onLoad={handleImageLoad}
+                  />
+                </>
+              )}
             </div>
           </div>
         </div>

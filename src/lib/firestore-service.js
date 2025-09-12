@@ -1,5 +1,22 @@
 // lib/FirestoreService.js
-import { dbAdmin as db } from './firebase-admin';
+import { db } from './firebase';
+import { 
+  collection, 
+  getDocs, 
+  doc, 
+  getDoc, 
+  addDoc, 
+  setDoc,
+  updateDoc, 
+  deleteDoc, 
+  query, 
+  where, 
+  orderBy, 
+  limit,
+  runTransaction,
+  writeBatch
+} from 'firebase/firestore';
+import { UAParser } from 'ua-parser-js';
 
 class FirestoreService {
   /**
@@ -71,37 +88,85 @@ class FirestoreService {
    */
   static async getCollection(collectionName, options = {}) {
     try {
-      let queryRef = db.collection(collectionName);
+      let queryRef = collection(db, collectionName);
+      const queryConstraints = [];
 
       if (options.where) {
-        queryRef = queryRef.where(options.where.field, options.where.operator, options.where.value);
+        queryConstraints.push(where(options.where.field, options.where.operator, options.where.value));
       }
       
       // Apply orderBy directly - let Firestore handle missing fields
       if (options.orderBy) {
         try {
-          queryRef = queryRef.orderBy(options.orderBy.field, options.orderBy.direction || 'asc');
+          queryConstraints.push(orderBy(options.orderBy.field, options.orderBy.direction || 'asc'));
         } catch (orderError) {
           // Continue without ordering
         }
       }
       
       if (options.limit) {
-        queryRef = queryRef.limit(options.limit);
+        queryConstraints.push(limit(options.limit));
       }
 
-      const snapshot = await queryRef.get();
+      const q = queryConstraints.length > 0 ? query(queryRef, ...queryConstraints) : queryRef;
+      const snapshot = await getDocs(q);
       
       if (snapshot.empty) {
         return [];
       }
       
-      return snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...this.serializeFirestoreData(doc.data())
+      return snapshot.docs.map(docSnap => ({
+        id: docSnap.id,
+        ...this.serializeFirestoreData(docSnap.data())
       }));
     } catch (error) {
       return [];
+    }
+  }
+
+  /**
+   * Add a new skill to Firestore
+   * @param {Object} skillData - The skill data to add
+   * @returns {Promise<string>} The ID of the created skill
+   */
+  static async addSkill(skillData) {
+    try {
+      const docRef = await addDoc(collection(db, 'skills'), skillData);
+      return docRef.id;
+    } catch (error) {
+      console.error('Error adding skill:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Update an existing skill in Firestore
+   * @param {string} skillId - The ID of the skill to update
+   * @param {Object} skillData - The updated skill data
+   * @returns {Promise<void>}
+   */
+  static async updateSkill(skillId, skillData) {
+    try {
+      const skillRef = doc(db, 'skills', skillId);
+      await updateDoc(skillRef, skillData);
+    } catch (error) {
+      console.error('Error updating skill:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Delete a skill from Firestore
+   * @param {string} skillId - The ID of the skill to delete
+   * @returns {Promise<void>}
+   */
+  static async deleteSkill(skillId) {
+    try {
+      const skillRef = doc(db, 'skills', skillId);
+      await deleteDoc(skillRef);
+    } catch (error) {
+      console.error('Error deleting skill:', error);
+      throw error;
     }
   }
 
@@ -117,10 +182,24 @@ class FirestoreService {
       icon: skill.icon ? this.fixCloudinaryUrl(skill.icon) : skill.icon
     }));
 
+    // Group skills by category
+    const groupedSkills = {};
+    fixedSkills.forEach(skill => {
+      if (!groupedSkills[skill.category]) {
+        groupedSkills[skill.category] = [];
+      }
+      groupedSkills[skill.category].push(skill);
+    });
+
+    // Sort skills within each category by percentage (highest first)
+    Object.keys(groupedSkills).forEach(category => {
+      groupedSkills[category].sort((a, b) => (b.percentage || b.level || 0) - (a.percentage || a.level || 0));
+    });
+
     // Categorize skills by category field
-    const technical = fixedSkills.filter(s => s.category === 'technical');
-    const comprehensive = fixedSkills.filter(s => s.category === 'comprehensive');
-    const languages = fixedSkills.filter(s => s.category === 'language');
+    const technical = groupedSkills['technical'] || [];
+    const comprehensive = groupedSkills['comprehensive'] || [];
+    const languages = groupedSkills['language'] || [];
 
     return [
       {
@@ -145,10 +224,12 @@ class FirestoreService {
    * Fetch and categorize experiences data
    */
   static async getExperiences() {
-    const experiences = await this.getCollection('experiences');
+    const experiences = await this.getCollection('experiences', {
+      orderBy: { field: 'startYear', direction: 'desc' }
+    });
 
-    const workExperiences = experiences.filter(exp => exp.type === 'Work');
-    const filmExperiences = experiences.filter(exp => exp.type === 'Film');
+    const workExperiences = experiences.filter(exp => exp.type === 'work');
+    const filmExperiences = experiences.filter(exp => exp.type === 'film');
 
     return { workExperiences, filmExperiences };
   }
@@ -198,80 +279,74 @@ class FirestoreService {
   }
 
   /**
-   * Fetch profile information including profile picture
-   */
-  static async getProfileInfo() {
-    try {
-      const profileDoc = await db.collection('siteContent').doc('profile').get();
-      return profileDoc.exists ? this.serializeFirestoreData(profileDoc.data()) : null;
-    } catch (error) {
-      return null;
-    }
-  }
-
-  /**
    * Fetch all documents that constitute the home page data
+   * Updated to match new SiteContent structure
    */
   static async getHomeData() {
     try {
-      const [homeDoc, statsDoc, socialDoc] = await Promise.all([
-        db.collection('siteContent').doc('home').get(),
-        db.collection('siteContent').doc('statistics').get(),
-        db.collection('siteContent').doc('socialMedia').get()
+      const [homeDoc, profileDoc, socialDoc, statsDoc] = await Promise.all([
+        getDoc(doc(db, 'siteContent', 'home')),
+        getDoc(doc(db, 'siteContent', 'profile_picture')),
+        getDoc(doc(db, 'siteContent', 'socialMedia')),
+        getDoc(doc(db, 'siteContent', 'statistics'))
       ]);
       
-      // Extract statistics array from the nested structure { items: [...] }
+      // Extract home content (description, subtitle)
+      const homeContent = homeDoc.exists() ? this.serializeFirestoreData(homeDoc.data()) : {
+        description: "Passionné d'audiovisuel, je réalise et expérimente divers projets vidéo. Curieux et adaptable, j'apporte une perspective innovante et m'implique pleinement dans de nouveaux défis. Prêt à collaborer, je cherche à développer mes compétences et à créer des contenus visuels captivants qui inspirent et engagent.",
+        subtitle: "Passionné d'audiovisuel & créateur digital"
+      };
+
+      // Extract profile picture
+      const profileInfo = profileDoc.exists() ? this.serializeFirestoreData(profileDoc.data()) : null;
+
+      // Extract statistics array from items field
       let statistics = [];
-      if (statsDoc.exists) {
+      if (statsDoc.exists()) {
         const statsData = this.serializeFirestoreData(statsDoc.data());
-        
-        // Check if statistics is in the 'items' field (as per migration script)
         if (statsData && Array.isArray(statsData.items)) {
           statistics = statsData.items;
         }
-        // Check if statistics is directly an array
-        else if (Array.isArray(statsData)) {
-          statistics = statsData;
-        }
-        // Check if statistics is in a 'data' field
-        else if (statsData && Array.isArray(statsData.data)) {
-          statistics = statsData.data;
-        }
-        // Check if statistics is in a 'statistics' field
-        else if (statsData && Array.isArray(statsData.statistics)) {
-          statistics = statsData.statistics;
-        }
-        // If none of the above, try to find any array field
-        else {
-          const arrayFields = Object.values(statsData).filter(value => Array.isArray(value));
-          if (arrayFields.length > 0) {
-            statistics = arrayFields[0];
-          }
-        }
       }
       
-      // Extract social media from the nested structure { links: {...} }
+      // Extract social media links
       let socialMedia = null;
-      if (socialDoc.exists) {
+      if (socialDoc.exists()) {
         const socialData = this.serializeFirestoreData(socialDoc.data());
-        
-        // Check if social media is in the 'links' field (as per migration script)
         if (socialData && socialData.links) {
           socialMedia = socialData.links;
-        }
-        // Check if social media is directly the document data
-        else if (socialData) {
-          socialMedia = socialData;
         }
       }
       
       return {
-        content: homeDoc.exists ? this.serializeFirestoreData(homeDoc.data()) : null,
+        content: homeContent,
         statistics: this.serializeFirestoreData(statistics),
-        socialMedia: this.serializeFirestoreData(socialMedia)
+        socialMedia: this.serializeFirestoreData(socialMedia),
+        profileInfo: profileInfo
       };
     } catch (error) {
-      return { content: null, statistics: [], socialMedia: null };
+      return { 
+        content: {
+          description: "Passionné d'audiovisuel, je réalise et expérimente divers projets vidéo. Curieux et adaptable, j'apporte une perspective innovante et m'implique pleinement dans de nouveaux défis. Prêt à collaborer, je cherche à développer mes compétences et à créer des contenus visuels captivants qui inspirent et engagent.",
+          subtitle: "Passionné d'audiovisuel & créateur digital"
+        },
+        statistics: [], 
+        socialMedia: null,
+        profileInfo: null
+      };
+    }
+  }
+
+  /**
+   * Fetch profile information including profile picture
+   * Updated to match new structure
+   */
+  static async getProfileInfo() {
+    try {
+      const profileDoc = await getDoc(doc(db, 'siteContent', 'profile_picture'));
+      return profileDoc.exists() ? this.serializeFirestoreData(profileDoc.data()) : null;
+    } catch (error) {
+      return null;
     }
   }
 
@@ -289,8 +364,8 @@ class FirestoreService {
    */
   static async getCvPath() {
     try {
-      const cvDoc = await db.collection('siteContent').doc('CV').get();
-      if (cvDoc.exists) {
+      const cvDoc = await getDoc(doc(db, 'siteContent', 'CV'));
+      if (cvDoc.exists()) {
         const data = cvDoc.data();
         // Assuming the field is named cv_path as per user request
         return data.cv_path || null; 
@@ -373,6 +448,325 @@ class FirestoreService {
   }
 
   /**
+   * Track pageview with visitor analytics
+   * @param {Object} pageviewData - Pageview tracking data
+   */
+  static async trackPageview(pageviewData) {
+    try {
+      const { visitorId, date, country, userAgent, referrer, timestamp } = pageviewData;
+      
+      // Parse user agent for device and browser info
+      const parser = new UAParser(userAgent || '');
+      const device = parser.getDevice().type || 'desktop';
+      const browser = parser.getBrowser().name || 'Unknown';
+
+      // Prefer server-side Admin SDK when available (API routes)
+      if (typeof window === 'undefined') {
+        try {
+          const { dbAdmin } = await import('./firebase-admin');
+          if (dbAdmin) {
+            // Update aggregate document
+            const docRef = dbAdmin.collection('analytics').doc('daily_stats');
+            const snap = await docRef.get();
+            const current = snap.exists ? snap.data() : {};
+
+            const next = { ...current };
+            next.updated_at = timestamp || new Date();
+            next.countries = { ...(current.countries || {}) };
+            next.devices = { ...(current.devices || {}) };
+            next.referrers = { ...(current.referrers || {}) };
+            next.browsers = { ...(current.browsers || {}) };
+            next.daily_visitors = { ...(current.daily_visitors || {}) };
+
+            next.countries[country || 'Unknown'] = (next.countries[country || 'Unknown'] || 0) + 1;
+            next.devices[device] = (next.devices[device] || 0) + 1;
+            next.referrers[referrer || 'Direct'] = (next.referrers[referrer || 'Direct'] || 0) + 1;
+            next.browsers[browser] = (next.browsers[browser] || 0) + 1;
+
+            const dayVisitors = Array.isArray(next.daily_visitors[date]) ? next.daily_visitors[date] : [];
+            if (!dayVisitors.includes(visitorId)) {
+              dayVisitors.push(visitorId);
+            }
+            next.daily_visitors[date] = dayVisitors;
+
+            await docRef.set(next, { merge: true });
+
+            // Optionally also store raw pageview
+            await dbAdmin
+              .collection('analytics')
+              .doc('daily_stats')
+              .collection('pageviews')
+              .add({
+                visitorId,
+                date,
+                country,
+                device,
+                browser,
+                referrer: referrer || 'direct',
+                timestamp
+              });
+            return;
+          }
+        } catch (_) {
+          // fall through to client SDK
+        }
+      }
+
+      {
+        // Fallback to client SDK: update aggregate doc then add raw pageview
+        const aggRef = doc(db, 'analytics', 'daily_stats');
+        const aggSnap = await getDoc(aggRef);
+        const current = aggSnap.exists() ? aggSnap.data() : {};
+        const next = { ...current };
+        next.updated_at = timestamp || new Date();
+        next.countries = { ...(current.countries || {}) };
+        next.devices = { ...(current.devices || {}) };
+        next.referrers = { ...(current.referrers || {}) };
+        next.browsers = { ...(current.browsers || {}) };
+        next.daily_visitors = { ...(current.daily_visitors || {}) };
+
+        next.countries[country || 'Unknown'] = (next.countries[country || 'Unknown'] || 0) + 1;
+        next.devices[device] = (next.devices[device] || 0) + 1;
+        next.referrers[referrer || 'Direct'] = (next.referrers[referrer || 'Direct'] || 0) + 1;
+        next.browsers[browser] = (next.browsers[browser] || 0) + 1;
+
+        const dayVisitors = Array.isArray(next.daily_visitors[date]) ? next.daily_visitors[date] : [];
+        if (!dayVisitors.includes(visitorId)) {
+          dayVisitors.push(visitorId);
+        }
+        next.daily_visitors[date] = dayVisitors;
+
+        await setDoc(aggRef, next, { merge: true });
+
+      const pageviewsRef = collection(db, 'analytics', 'daily_stats', 'pageviews');
+      await addDoc(pageviewsRef, {
+        visitorId,
+        date,
+        country,
+        device,
+        browser,
+        referrer: referrer || 'direct',
+        timestamp
+      });
+      }
+
+    } catch (error) {
+      console.error('Error tracking pageview:', error);
+      // Don't rethrow the error to the client, just log it
+    }
+  }
+
+  /**
+   * Track CV download with date-based analytics
+   * @param {Object} downloadData - Download tracking data
+   */
+  static async trackCvDownload(downloadData) {
+    try {
+      const { date, userAgent, country, timestamp } = downloadData;
+      
+      // Parse user agent for device and browser info
+      const parser = new UAParser(userAgent || '');
+      const device = parser.getDevice().type || 'desktop';
+      const browser = parser.getBrowser().name || 'Unknown';
+
+      // Prefer server-side Admin SDK when available (API routes)
+      if (typeof window === 'undefined') {
+        try {
+          const { dbAdmin } = await import('./firebase-admin');
+          if (dbAdmin) {
+            // Update aggregate document
+            const docRef = dbAdmin.collection('analytics').doc('daily_stats');
+            const snap = await docRef.get();
+            const current = snap.exists ? snap.data() : {};
+
+            const next = { ...current };
+            next.updated_at = timestamp || new Date();
+            next.countries = { ...(current.countries || {}) };
+            next.devices = { ...(current.devices || {}) };
+            next.browsers = { ...(current.browsers || {}) };
+            next.cv_downloads_total = (current.cv_downloads_total || 0) + 1;
+            next.cv_downloads_by_date = { ...(current.cv_downloads_by_date || {}) };
+            next.cv_downloads_by_date[date] = (next.cv_downloads_by_date[date] || 0) + 1;
+
+            next.countries[country || 'Unknown'] = (next.countries[country || 'Unknown'] || 0) + 1;
+            next.devices[device] = (next.devices[device] || 0) + 1;
+            next.browsers[browser] = (next.browsers[browser] || 0) + 1;
+
+            await docRef.set(next, { merge: true });
+
+            await dbAdmin
+              .collection('analytics')
+              .doc('daily_stats')
+              .collection('cv_downloads')
+              .add({
+                date,
+                country,
+                device,
+                browser,
+                timestamp
+              });
+            return;
+          }
+        } catch (_) {
+          // fall through to client SDK
+        }
+      }
+
+      {
+        // Fallback to client SDK: update aggregate doc then add raw download
+        const aggRef = doc(db, 'analytics', 'daily_stats');
+        const aggSnap = await getDoc(aggRef);
+        const current = aggSnap.exists() ? aggSnap.data() : {};
+        const next = { ...current };
+        next.updated_at = timestamp || new Date();
+        next.countries = { ...(current.countries || {}) };
+        next.devices = { ...(current.devices || {}) };
+        next.browsers = { ...(current.browsers || {}) };
+        next.cv_downloads_total = (current.cv_downloads_total || 0) + 1;
+        next.cv_downloads_by_date = { ...(current.cv_downloads_by_date || {}) };
+        next.cv_downloads_by_date[date] = (next.cv_downloads_by_date[date] || 0) + 1;
+
+        next.countries[country || 'Unknown'] = (next.countries[country || 'Unknown'] || 0) + 1;
+        next.devices[device] = (next.devices[device] || 0) + 1;
+        next.browsers[browser] = (next.browsers[browser] || 0) + 1;
+
+        await setDoc(aggRef, next, { merge: true });
+
+      const downloadsRef = collection(db, 'analytics', 'daily_stats', 'cv_downloads');
+      await addDoc(downloadsRef, {
+        date,
+        country,
+        device,
+        browser,
+        timestamp
+      });
+      }
+
+    } catch (error) {
+      console.error('Error tracking CV download:', error);
+      // Don't rethrow the error to the client, just log it
+    }
+  }
+
+  /**
+   * Fetch and process analytics data from Firestore
+   * @returns {Promise<Object>} Processed analytics data
+   */
+  static async getAnalyticsData() {
+    try {
+      const analyticsDoc = await getDoc(doc(db, 'analytics', 'daily_stats'));
+      
+      if (!analyticsDoc.exists()) {
+        return {
+          totalVisitors: 0,
+          cvDownloads: 0,
+          visitorsByDay: [],
+          cvDownloadsByDay: [],
+          topCountries: [],
+          devices: [],
+          topReferrers: [],
+          browsers: []
+        };
+      }
+
+      const data = this.serializeFirestoreData(analyticsDoc.data());
+      
+      // Calculate total visitors from daily_visitors map
+      let totalVisitors = 0;
+      const visitorsByDay = [];
+      if (data.daily_visitors) {
+        for (const [date, visitors] of Object.entries(data.daily_visitors)) {
+          const uniqueVisitors = Array.isArray(visitors) ? visitors.length : 0;
+          totalVisitors += uniqueVisitors;
+          visitorsByDay.push({
+            date,
+            visitors: uniqueVisitors
+          });
+        }
+      }
+
+      // Remove page views tracking - focus on unique visitors only
+
+      // Get CV downloads
+      const cvDownloads = data.cv_downloads_total || 0;
+
+      // Process CV downloads by day
+      const cvDownloadsByDate = data.cv_downloads_by_date || {};
+      const cvDownloadsByDay = [];
+      
+      for (const [date, downloads] of Object.entries(cvDownloadsByDate)) {
+        if (typeof downloads === 'number') {
+          cvDownloadsByDay.push({
+            date,
+            downloads: downloads
+          });
+        }
+      }
+
+      // Process countries data
+      let topCountries = [];
+      if (data.countries) {
+        topCountries = Object.entries(data.countries)
+          .map(([country, count]) => ({ country, count }))
+          .sort((a, b) => b.count - a.count)
+          .slice(0, 10);
+      }
+
+      // Process devices data
+      let devices = [];
+      if (data.devices) {
+        devices = Object.entries(data.devices)
+          .map(([device, count]) => ({ device, count }))
+          .sort((a, b) => b.count - a.count);
+      }
+
+      // Process referrers data
+      let topReferrers = [];
+      if (data.referrers) {
+        topReferrers = Object.entries(data.referrers)
+          .map(([referrer, count]) => ({ referrer, count }))
+          .sort((a, b) => b.count - a.count)
+          .slice(0, 10);
+      }
+
+      // Process browsers data
+      let browsers = [];
+      if (data.browsers) {
+        browsers = Object.entries(data.browsers)
+          .map(([browser, count]) => ({ browser, count }))
+          .sort((a, b) => b.count - a.count);
+      }
+
+      // Sort by date for charting (most recent first)
+      visitorsByDay.sort((a, b) => new Date(b.date) - new Date(a.date));
+      cvDownloadsByDay.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+      return {
+        totalVisitors,
+        cvDownloads,
+        visitorsByDay: visitorsByDay.slice(0, 30),
+        cvDownloadsByDay: cvDownloadsByDay.slice(0, 30),
+        topCountries,
+        devices,
+        topReferrers,
+        browsers
+      };
+    } catch (error) {
+      console.error('Error fetching analytics data:', error);
+      return {
+        totalVisitors: 0,
+        cvDownloads: 0,
+        visitorsByDay: [],
+        cvDownloadsByDay: [],
+        topCountries: [],
+        devices: [],
+        topReferrers: [],
+        browsers: []
+      };
+    }
+  }
+
+  /**
    * Debug method to test all collections and see what's available
    */
   static async debugCollections() {
@@ -382,7 +776,7 @@ class FirestoreService {
       
       for (const collectionName of collections) {
         try {
-          const snapshot = await db.collection(collectionName).get();
+          const snapshot = await getDocs(collection(db, collectionName));
           results[collectionName] = {
             exists: true,
             documentCount: snapshot.size,
@@ -403,4 +797,5 @@ class FirestoreService {
   }
 }
 
+export { FirestoreService };
 export default FirestoreService;

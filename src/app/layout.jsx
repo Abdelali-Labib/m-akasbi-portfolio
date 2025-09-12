@@ -2,7 +2,7 @@ import { PT_Serif } from "next/font/google";
 import "./globals.css";
 import ThemeProvider from "@/Providers/ThemeProvider";
 import { AuthProvider } from "@/Providers/AuthContext";
-import FirebaseAnalyticsProvider from '@/Providers/FirebaseAnalyticsProvider';
+import CustomAnalyticsTracker from "@/components/CustomAnalyticsTracker";
 
 // Font optimized without preload to avoid unused resource warning
 const PTserif = PT_Serif({
@@ -31,9 +31,8 @@ export default function RootLayout({ children }) {
           disableTransitionOnChange
         >
           <AuthProvider>
-            <FirebaseAnalyticsProvider>
-              {children}
-            </FirebaseAnalyticsProvider>
+            <CustomAnalyticsTracker />
+            {children}
           </AuthProvider>
         </ThemeProvider>
       </body>

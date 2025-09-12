@@ -30,6 +30,7 @@ export default function HomeClient({
    * Opens the API route that serves the CV file, triggering a download.
    */
   const handleDownloadCv = () => {
+    // Simply open the CV download endpoint - tracking is handled server-side
     window.open('/api/cv', '_blank');
   };
 
@@ -72,11 +73,9 @@ export default function HomeClient({
 
             <AnimatedItem delay={400}>
               <div className="description-section">
-                {homeContent.descriptions.map((description, index) => (
-                  <p key={index} className="description-text">
-                    {description}
-                  </p>
-                ))}
+                <p className="description-text" style={{ whiteSpace: 'pre-line' }}>
+                  {homeContent.description}
+                </p>
               </div>
             </AnimatedItem>
 

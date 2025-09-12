@@ -99,7 +99,7 @@ const SkillsClient = ({ sections }) => {
                 <div className="w-32 sm:w-40 lg:w-48 h-1.5 lg:h-2 bg-gradient-to-r from-accent/30 via-accent to-accent/30 rounded-full mx-auto" />
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 lg:grid-cols-3 sm:gap-6 lg:gap-8 xl:gap-10">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 lg:grid-cols-3 sm:gap-6 lg:gap-8 xl:gap-10 items-stretch">
                 {sections[currentSection].data.length > 0 ? (
                   sections[currentSection].data.map((skill, index) => (
                     <SkillCard

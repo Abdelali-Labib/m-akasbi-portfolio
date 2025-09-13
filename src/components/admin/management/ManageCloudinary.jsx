@@ -99,6 +99,7 @@ const ManageCloudinary = () => {
 
     try {
       setUploading(true);
+      setMessage(''); // Clear any previous messages
       const formData = new FormData();
       formData.append('file', file);
 
@@ -110,8 +111,11 @@ const ManageCloudinary = () => {
       const result = await response.json();
       
       if (response.ok) {
-        setMessage('Fichier uploadé avec succès');
-        fetchFiles(); // Refresh the file list
+        setMessage('Fichier uploadé avec succès ! Il peut prendre quelques minutes pour apparaître partout.');
+        // Add a small delay to ensure Cloudinary has processed the file
+        setTimeout(() => {
+          fetchFiles(); // Refresh the file list
+        }, 1000);
       } else {
         setMessage(result.error || 'Erreur lors de l\'upload');
       }
@@ -152,6 +156,7 @@ const ManageCloudinary = () => {
     if (!deleteModal.files || deleteModal.files.length === 0) return;
     
     setDeleteModal(prev => ({ ...prev, loading: true }));
+    setMessage(''); // Clear any previous messages
     
     const resourcesToDelete = deleteModal.files.map(f => ({ 
       public_id: f.public_id,
@@ -168,7 +173,7 @@ const ManageCloudinary = () => {
       const result = await response.json();
 
       if (response.ok) {
-        setMessage(result.message || `${resourcesToDelete.length} fichier(s) supprimé(s) avec succès`);
+        setMessage(`${resourcesToDelete.length} fichier(s) supprimé(s) avec succès ! Les changements peuvent prendre quelques minutes pour être visibles.`);
         setSelectedFiles([]);
         await fetchFiles();
         setDeleteModal({ isOpen: false, files: [], loading: false });
@@ -196,6 +201,7 @@ const ManageCloudinary = () => {
     if (!renameModal.file || !renameModal.newName.trim()) return;
     
     setRenameModal(prev => ({ ...prev, loading: true, error: '' }));
+    setMessage(''); // Clear any previous messages
     
     try {
       // Check if name already exists
@@ -226,7 +232,7 @@ const ManageCloudinary = () => {
       const result = await response.json();
 
       if (response.ok) {
-        setMessage('Fichier renommé avec succès');
+        setMessage('Fichier renommé avec succès ! Les changements peuvent prendre quelques minutes pour être visibles.');
         await fetchFiles();
         setRenameModal({ isOpen: false, file: null, newName: '', loading: false, error: '' });
       } else {
@@ -273,12 +279,12 @@ const ManageCloudinary = () => {
     fetchFiles();
   }, []);
 
-  // Clear messages after 3 seconds
+  // Clear messages after 10 seconds
   useEffect(() => {
     if (message) {
       const timer = setTimeout(() => {
         setMessage('');
-      }, 3000);
+      }, 10000);
       return () => clearTimeout(timer);
     }
   }, [message]);

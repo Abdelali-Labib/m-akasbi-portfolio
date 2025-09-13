@@ -452,11 +452,31 @@ class FirestoreService {
     try {
       const { visitorId, date, country, userAgent, referrer, timestamp } = visitorData;
       
-  // ...existing code...
+      // Parse user agent for device info only
       const parser = new UAParser(userAgent || '');
-      const device = parser.getDevice().type || 'desktop';
+      const deviceResult = parser.getDevice();
+      let device = deviceResult.type;
 
-  // ...existing code...
+      // If device type is not directly identified, infer from OS or UA string
+      if (!device) {
+        const os = parser.getOS().name;
+        const ua = (userAgent || '').toLowerCase();
+        if (os === 'Android' || os === 'iOS') {
+          device = 'mobile';
+        } else if (ua.includes('mobile')) {
+          device = 'mobile';
+        } else if (ua.includes('tablet') || ua.includes('ipad')) {
+          device = 'tablet';
+        } else {
+          device = 'desktop'; // Default fallback
+        }
+      }
+
+      // Normalize device types (e.g., 'wearable' could be grouped or handled)
+      if (!['mobile', 'tablet', 'desktop'].includes(device)) {
+        device = 'desktop'; // Or handle other types like 'smarttv', 'console' if needed
+      }
+
       if (typeof window === 'undefined') {
         try {
           const { dbAdmin } = await import('./firebase-admin');
@@ -480,7 +500,7 @@ class FirestoreService {
               dayVisitors.push(visitorId);
               next.daily_visitors[date] = dayVisitors;
               
-              // ...existing code...
+              // Only count unique visitors for countries, devices, and referrers
               next.visitor_countries[country || 'Unknown'] = (next.visitor_countries[country || 'Unknown'] || 0) + 1;
               next.visitor_devices[device] = (next.visitor_devices[device] || 0) + 1;
               next.visitor_referrers[referrer || 'Direct'] = (next.visitor_referrers[referrer || 'Direct'] || 0) + 1;
@@ -592,33 +612,27 @@ class FirestoreService {
           cvDownloadsByDay: [],
           topCountries: [],
           devices: [],
-          topReferrers: [],
-          browsers: []
+          topReferrers: []
         };
       }
 
       const data = this.serializeFirestoreData(analyticsDoc.data());
       
-  // ...existing code...
-      let totalVisitors = 0;
-      const visitorsByDay = [];
-      if (data.daily_visitors) {
-        for (const [date, visitors] of Object.entries(data.daily_visitors)) {
-          const uniqueVisitors = Array.isArray(visitors) ? visitors.length : 0;
-          totalVisitors += uniqueVisitors;
-          visitorsByDay.push({
-            date,
-            visitors: uniqueVisitors
-          });
-        }
-      }
+      // Calculate total visitors and visitors by day from the daily_visitors map
+      const dailyVisitorsMap = data.daily_visitors || {};
+      const totalVisitors = Object.values(dailyVisitorsMap).reduce((sum, visitorsArray) => {
+        return sum + (Array.isArray(visitorsArray) ? visitorsArray.length : 0);
+      }, 0);
 
-  // ...existing code...
+      const visitorsByDay = Object.entries(dailyVisitorsMap).map(([date, visitorsArray]) => ({
+        date,
+        visitors: Array.isArray(visitorsArray) ? visitorsArray.length : 0,
+      }));
 
-  // ...existing code...
+      // Calculate CV downloads total from cv_downloads_by_date
       const cvDownloads = Object.values(data.cv_downloads_by_date || {}).reduce((sum, count) => sum + (count || 0), 0);
 
-  // ...existing code...
+      // Process CV downloads by day
       const cvDownloadsByDate = data.cv_downloads_by_date || {};
       const cvDownloadsByDay = [];
       
@@ -631,7 +645,7 @@ class FirestoreService {
         }
       }
 
-  // ...existing code...
+      // Process visitor countries data
       let topCountries = [];
       if (data.visitor_countries) {
         topCountries = Object.entries(data.visitor_countries)
@@ -640,7 +654,7 @@ class FirestoreService {
           .slice(0, 10);
       }
 
-  // ...existing code...
+      // Process visitor devices data
       let devices = [];
       if (data.visitor_devices) {
         devices = Object.entries(data.visitor_devices)
@@ -648,7 +662,7 @@ class FirestoreService {
           .sort((a, b) => b.count - a.count);
       }
 
-  // ...existing code...
+      // Process visitor referrers data
       let topReferrers = [];
       if (data.visitor_referrers) {
         topReferrers = Object.entries(data.visitor_referrers)
@@ -657,7 +671,7 @@ class FirestoreService {
           .slice(0, 10);
       }
 
-  // ...existing code...
+      // Sort by date for charting (most recent first)
       visitorsByDay.sort((a, b) => new Date(b.date) - new Date(a.date));
       cvDownloadsByDay.sort((a, b) => new Date(b.date) - new Date(a.date));
 
@@ -671,6 +685,7 @@ class FirestoreService {
         topReferrers
       };
     } catch (error) {
+      console.error('Error fetching analytics data:', error);
       return {
         totalVisitors: 0,
         cvDownloads: 0,

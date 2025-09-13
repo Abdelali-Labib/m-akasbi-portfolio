@@ -16,7 +16,12 @@ export async function POST(request) {
       return NextResponse.json({ success: true, message: 'Invalid JSON body' });
     }
     
-    const { type, visitorId, referrer, userAgent, data } = body;
+    const { type, visitorId, pathname, referrer: pageReferrer, userAgent, data } = body;
+
+    // Do not track visits to admin pages
+    if (pathname && pathname.startsWith('/admin')) {
+      return NextResponse.json({ success: true, message: 'Admin visit not tracked.' });
+    }
     
     // Get headers for country detection
     const headersList = await headers();
@@ -38,7 +43,7 @@ export async function POST(request) {
         date: today,
         country,
         userAgent: resolvedUserAgent,
-        referrer,
+        referrer: pageReferrer,
         timestamp: new Date()
       });
       

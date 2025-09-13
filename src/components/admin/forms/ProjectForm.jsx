@@ -93,7 +93,6 @@ const ProjectForm = ({ initialData, onSubmit, onCancel }) => {
       const result = await response.json();
       setFormData({ ...formData, imageUrl: result.url });
     } catch (error) {
-      console.error('Upload error:', error);
       setErrors({ ...errors, imageUrl: 'Erreur lors du téléchargement. Veuillez réessayer.' });
     } finally {
       setUploading(false);
@@ -289,13 +288,13 @@ const ProjectForm = ({ initialData, onSubmit, onCancel }) => {
                   name="thumbnailUrl" 
                   value={formData.thumbnailUrl} 
                   onChange={handleInputChange} 
-                  className="w-full px-3 py-2 rounded border border-primary/20 dark:border-light/20 bg-white dark:bg-primary text-primary dark:text-light" 
+                  className="w-full px-3 py-2 rounded border border-primary/20 dark:border-light/20 text-primary dark:text-light" 
                   required 
                 />
               </div>
               <div>
                 <label className="block text-sm font-medium mb-2 text-primary dark:text-light">Titre</label>
-                <input name="title" value={formData.title} onChange={handleInputChange} className="w-full px-3 py-2 rounded border border-primary/20 dark:border-light/20 bg-white dark:bg-primary text-primary dark:text-light" required />
+                <input name="title" value={formData.title} onChange={handleInputChange} className="w-full px-3 py-2 rounded border border-primary/20 dark:border-light/20 text-primary dark:text-light" required />
               </div>
               <div>
                 <label className="block text-sm font-medium mb-2 text-primary dark:text-light">URL Playlist YouTube</label>
@@ -303,7 +302,7 @@ const ProjectForm = ({ initialData, onSubmit, onCancel }) => {
                   name="playlistUrl" 
                   value={extractYouTubePlaylistThumbnail(formData.playlistUrl)} 
                   onChange={handleInputChange} 
-                  className="w-full px-3 py-2 rounded border border-primary/20 dark:border-light/20 bg-white dark:bg-primary text-primary dark:text-light" 
+                  className="w-full px-3 py-2 rounded border border-primary/20 dark:border-light/20 text-primary dark:text-light" 
                   required 
                 />
               </div>
@@ -320,7 +319,7 @@ const ProjectForm = ({ initialData, onSubmit, onCancel }) => {
               <FiSave className="w-4 h-4" />
               {saving ? 'Sauvegarde...' : (initialData ? 'Mettre à Jour' : 'Sauvegarder')}
             </button>
-            <button type="button" onClick={onCancel} className="w-full sm:w-auto px-6 py-3 bg-primary/70 dark:bg-light/70 text-light dark:text-primary rounded-lg hover:bg-primary/80 dark:hover:bg-light/80 transition-colors flex items-center gap-2">
+            <button type="button" onClick={onCancel} className="w-full sm:w-auto px-6 py-3 text-light dark:text-primary rounded-lg transition-colors flex items-center gap-2">
               <FiX className="w-4 h-4" />
               Annuler
             </button>

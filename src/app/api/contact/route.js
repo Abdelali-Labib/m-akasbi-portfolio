@@ -300,7 +300,6 @@ export async function POST(req) {
             `,
         });
     } catch (emailError) {
-        console.error('Erreur lors de l\'envoi de l\'email:', emailError);
     }
 
     return new Response(

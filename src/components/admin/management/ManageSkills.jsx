@@ -18,36 +18,28 @@ const ManageSkills = () => {
   const [currentSkill, setCurrentSkill] = useState(null);
   const [deleteModal, setDeleteModal] = useState({ isOpen: false, skill: null, loading: false });
 
-  // Helper function to get skill icon URL
   const getSkillIconUrl = (iconPath) => {
     if (!iconPath) return null;
     
-    // If it's already a full URL, use it directly
     if (iconPath.startsWith('http')) {
       return iconPath;
     }
     
-    // If it's just a filename, convert to Cloudinary URL
     return getCloudinaryUrl(iconPath);
   };
 
   const fetchSkills = async () => {
-    console.log('Fetching skills from component...');
     try {
       const response = await fetch('/api/admin/skills');
       const result = await response.json();
-      console.log('Skills API response:', result);
       
       if (result.success) {
-        console.log('Setting skills:', result.data);
         setSkills(result.data || []);
         setError('');
       } else {
-        console.error('API error:', result.error);
         setError(result.error || 'Erreur lors du chargement des compétences');
       }
     } catch (error) {
-      console.error('Fetch error:', error);
       setError('Erreur lors du chargement des compétences');
     } finally {
       setLoading(false);
@@ -84,7 +76,6 @@ const ManageSkills = () => {
       await fetchSkills();
       resetForm();
     } catch (error) {
-      console.error('Error saving skill:', error);
       setError('Erreur lors de la sauvegarde.');
     }
   };
@@ -122,7 +113,6 @@ const ManageSkills = () => {
       await fetchSkills();
       setDeleteModal({ isOpen: false, skill: null, loading: false });
     } catch (error) {
-      console.error('Error deleting skill:', error);
       setError('Erreur lors de la suppression. Vérifiez vos permissions administrateur.');
       setDeleteModal(prev => ({ ...prev, loading: false }));
     }
@@ -137,7 +127,6 @@ const ManageSkills = () => {
     return <LoadingSpinner message="Chargement des compétences..." size="lg" variant="dots" />;
   }
 
-  // Show message if no data exists
   if (!loading && skills.length === 0) {
     return (
       <div className="space-y-8">
@@ -163,7 +152,6 @@ const ManageSkills = () => {
     );
   }
 
-  // Group skills by category with French labels and icons
   const categoryConfig = {
     'technical': { label: 'Outils Techniques', icon: FaTools },
     'comprehensive': { label: 'Compétences Générales', icon: FaLightbulb },
@@ -185,7 +173,6 @@ const ManageSkills = () => {
     return acc;
   }, {});
 
-  // Sort skills within each category by level (highest first)
   Object.keys(groupedSkills).forEach(category => {
     groupedSkills[category].skills.sort((a, b) => b.level - a.level);
   });
@@ -203,7 +190,7 @@ const ManageSkills = () => {
           const iconUrl = getSkillIconUrl(skill.icon);
           
           return (
-            <div key={skill.id} className="group bg-light/50 dark:bg-primary/50 backdrop-blur-sm rounded-2xl p-4 sm:p-6 border border-primary/10 dark:border-light/10 hover:border-primary/20 dark:hover:border-light/20 transition-all duration-300 hover:shadow-lg">
+            <div key={skill.id} className="group backdrop-blur-sm rounded-2xl p-4 sm:p-6 border border-primary/10 dark:border-light/10 hover:border-primary/20 dark:hover:border-light/20 transition-all duration-300 hover:shadow-lg">
               <div className="flex items-start gap-3 sm:gap-4 mb-4">
                 {/* Skill Icon */}
                 <div className="w-10 h-10 sm:w-12 sm:h-12 bg-accent/10 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:bg-accent/20 transition-colors">
@@ -245,14 +232,14 @@ const ManageSkills = () => {
               <div className="flex gap-2 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-300 justify-end">
                 <button 
                   onClick={() => handleEdit(skill)} 
-                  className="p-2 bg-light/90 dark:bg-primary/90 text-accent rounded-lg hover:bg-light dark:hover:bg-primary transition-colors shadow-sm"
+                  className="p-2 text-accent rounded-lg transition-colors shadow-sm"
                   title="Modifier"
                 >
                   <FaEdit className="w-4 h-4" />
                 </button>
                 <button
                   onClick={() => handleDelete(skill)}
-                  className="p-2 bg-light/90 dark:bg-primary/90 text-red-500 rounded-lg hover:bg-light dark:hover:bg-primary transition-colors shadow-sm"
+                  className="p-2 text-red-500 rounded-lg transition-colors shadow-sm"
                   title="Supprimer"
                 >
                   <FaTrash className="w-4 h-4" />
@@ -266,7 +253,7 @@ const ManageSkills = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-light via-light/95 to-light/90 dark:from-primary dark:via-primary/95 dark:to-primary/90 p-4 sm:p-6 lg:p-8">
+  <div className="min-h-screen bg-gradient-to-br p-4 sm:p-6 lg:p-8">
       <div className="max-w-7xl mx-auto space-y-6 lg:space-y-8">
         <div className="mb-8">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -299,7 +286,7 @@ const ManageSkills = () => {
       {!isFormVisible && (
         <div>
           {error && (
-            <div className="bg-light dark:bg-primary border border-red-200 dark:border-red-800 rounded-lg p-4 mb-6">
+            <div className="border border-red-200 dark:border-red-800 rounded-lg p-4 mb-6">
               <div className="flex items-center">
                 <FaExclamationTriangle className="text-red-500 mr-2" />
                 <span className="text-red-700 dark:text-red-300">{error}</span>
@@ -308,7 +295,7 @@ const ManageSkills = () => {
           )}
           
           {!error && skills.length === 0 && (
-            <div className="bg-light/50 dark:bg-primary/50 backdrop-blur-sm rounded-2xl p-8 border border-primary/10 dark:border-light/10 text-center">
+            <div className="backdrop-blur-sm rounded-2xl p-8 border border-primary/10 dark:border-light/10 text-center">
               <div className="mb-6">
                 <div className="w-16 h-16 bg-accent/10 rounded-full flex items-center justify-center mx-auto mb-4">
                   <FaPlus className="w-8 h-8 text-accent" />

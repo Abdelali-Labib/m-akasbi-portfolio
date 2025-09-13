@@ -15,23 +15,18 @@ const ManageProjects = () => {
   const [currentProject, setCurrentProject] = useState(null);
   const [deleteModal, setDeleteModal] = useState({ isOpen: false, project: null, loading: false });
 
-  // Helper function to get the correct image URL based on project type
   const getProjectImageUrl = (project) => {
-    // For image type projects, use the 'img' field
     if (project.type === 'image' && project.img) {
-      // If it's just a filename (no http/https), it's a Cloudinary image
       if (!project.img.startsWith('http')) {
         return getCloudinaryUrl(project.img);
       }
       return project.img;
     }
     
-    // For video and playlist types, use the 'thumbnail' field
     if ((project.type === 'video' || project.type === 'playlist') && project.thumbnail) {
       return project.thumbnail;
     }
     
-    // Fallback: check img field for any type
     if (project.img) {
       if (project.img.includes('img.youtube.com') || project.img.includes('i.ytimg.com')) {
         return project.img;
@@ -45,7 +40,6 @@ const ManageProjects = () => {
     return null;
   };
 
-  // Helper function to get project type icon and color
   const getProjectTypeInfo = (type) => {
     switch (type?.toLowerCase()) {
       case 'video':
@@ -60,22 +54,17 @@ const ManageProjects = () => {
   };
 
   const fetchProjects = async () => {
-    console.log('Fetching projects from component...');
     try {
       const response = await fetch('/api/admin/projects');
       const result = await response.json();
-      console.log('Projects API response:', result);
       
       if (result.success) {
-        console.log('Setting projects:', result.data);
         setProjects(result.data || []);
         setError('');
       } else {
-        console.error('API error:', result.error);
         setError(result.error || 'Erreur lors du chargement des projets');
       }
     } catch (error) {
-      console.error('Fetch error:', error);
       setError('Erreur lors du chargement des projets');
     } finally {
       setLoading(false);
@@ -106,7 +95,6 @@ const ManageProjects = () => {
       await fetchProjects();
       resetForm();
     } catch (error) {
-      console.error('Error submitting form:', error);
       alert('Erreur lors de la sauvegarde. Veuillez réessayer.');
     }
   };
@@ -139,7 +127,6 @@ const ManageProjects = () => {
       await fetchProjects();
       setDeleteModal({ isOpen: false, project: null, loading: false });
     } catch (error) {
-      console.error('Error deleting project:', error);
       setDeleteModal(prev => ({ ...prev, loading: false }));
     }
   };
@@ -182,7 +169,6 @@ const ManageProjects = () => {
     );
   }
 
-  // Group projects by type
   const groupedProjects = {
     video: projects.filter(p => p.type === 'video'),
     playlist: projects.filter(p => p.type === 'playlist'),
@@ -212,8 +198,7 @@ const ManageProjects = () => {
             const imageUrl = getProjectImageUrl(proj);
             
             return (
-              <div key={proj.id} className="group border border-primary/20 dark:border-light/20 rounded-xl overflow-hidden bg-white dark:bg-primary shadow-sm hover:shadow-lg transition-all duration-300 hover:border-accent/50">
-                {/* Project Image */}
+              <div key={proj.id} className="group border border-primary/20 dark:border-light/20 rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 hover:border-accent/50">
                 <div className="relative h-48 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-900">
                   {imageUrl ? (
                     <img 
@@ -233,24 +218,22 @@ const ManageProjects = () => {
                     </div>
                   </div>
                   
-                  {/* Type Badge */}
                   <div className={`absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-medium ${typeInfo.bgColor} ${typeInfo.color} backdrop-blur-sm`}>
                     <TypeIcon className="inline w-3 h-3 mr-1" />
                     {proj.type || 'Projet'}
                   </div>
                   
-                  {/* Actions Overlay */}
                   <div className="absolute top-3 right-3 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     <button 
                       onClick={() => handleEdit(proj)} 
-                      className="p-2 bg-light/90 dark:bg-primary/90 text-accent rounded-lg hover:bg-light dark:hover:bg-primary transition-colors shadow-sm"
+                      className="p-2 text-accent rounded-lg transition-colors shadow-sm"
                       title="Modifier"
                     >
                       <FaEdit className="w-4 h-4" />
                     </button>
                     <button
                       onClick={() => handleDeleteClick(proj)}
-                      className="p-2 bg-light/90 dark:bg-primary/90 text-red-500 rounded-lg hover:bg-light dark:hover:bg-primary transition-colors shadow-sm"
+                      className="p-2 text-red-500 rounded-lg transition-colors shadow-sm"
                       title="Supprimer"
                     >
                       <FaTrash className="w-4 h-4" />
@@ -371,7 +354,7 @@ const ManageProjects = () => {
           )}
           
           {!loading && !error && projects.length === 0 && (
-            <div className="text-center py-12 bg-light/50 dark:bg-primary/50 rounded-lg border border-primary/20 dark:border-light/20">
+            <div className="text-center py-12 rounded-lg border border-primary/20 dark:border-light/20">
               <div className="text-gray-400 dark:text-gray-500 mb-4">
                 <FaProjectDiagram className="mx-auto h-12 w-12 mb-4" />
               </div>

@@ -9,7 +9,7 @@ export const NavbarVisibilityContext = createContext({
 });
 
 /**
- * Hook to use navbar visibility context
+ * React hook for accessing navbar visibility context.
  */
 export const useNavbarVisibility = () => {
   const context = useContext(NavbarVisibilityContext);

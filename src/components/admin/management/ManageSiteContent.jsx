@@ -134,7 +134,6 @@ const ManageSiteContent = () => {
       await fetchDocuments();
       setDeleteModal({ isOpen: false, document: null, loading: false });
     } catch (error) {
-      console.error('Error deleting document:', error);
       setDeleteModal(prev => ({ ...prev, loading: false }));
     }
   };
@@ -166,7 +165,7 @@ const ManageSiteContent = () => {
           const IconComponent = config.icon;
           
           return (
-            <div key={doc.id} className="group bg-light/50 dark:bg-primary/50 backdrop-blur-sm rounded-2xl p-4 sm:p-6 border border-primary/10 dark:border-light/10 hover:border-primary/20 dark:hover:border-light/20 transition-all duration-300 hover:shadow-lg">
+            <div key={doc.id} className="group backdrop-blur-sm rounded-2xl p-4 sm:p-6 border border-primary/10 dark:border-light/10 hover:border-primary/20 dark:hover:border-light/20 transition-all duration-300 hover:shadow-lg">
               <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4 mb-4">
                 <div className="flex-1">
                   <h3 className="text-lg sm:text-xl font-semibold text-primary dark:text-light mb-3">
@@ -185,14 +184,14 @@ const ManageSiteContent = () => {
                 <div className="flex gap-2 sm:ml-6 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-300 justify-end sm:justify-start">
                   <button 
                     onClick={() => handleEdit(doc)} 
-                    className="p-2 bg-light/90 dark:bg-primary/90 text-accent rounded-lg hover:bg-light dark:hover:bg-primary transition-colors shadow-sm"
+                    className="p-2 text-accent rounded-lg transition-colors shadow-sm"
                     title="Modifier"
                   >
                     <FiEdit className="w-4 h-4" />
                   </button>
                   <button
                     onClick={() => handleDeleteClick(doc)}
-                    className="p-2 bg-light/90 dark:bg-primary/90 text-red-500 rounded-lg hover:bg-light dark:hover:bg-primary transition-colors shadow-sm"
+                    className="p-2 text-red-500 rounded-lg transition-colors shadow-sm"
                     title="Supprimer"
                   >
                     <FiTrash2 className="w-4 h-4" />
@@ -207,7 +206,7 @@ const ManageSiteContent = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-light via-light/95 to-light/90 dark:from-primary dark:via-primary/95 dark:to-primary/90 p-4 sm:p-6 lg:p-8">
+  <div className="min-h-screen bg-gradient-to-br p-4 sm:p-6 lg:p-8">
       <div className="max-w-7xl mx-auto space-y-6 lg:space-y-8">
       <div className="mb-8">
         <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-primary dark:text-light mb-2">Gestion du Contenu du Site</h1>
@@ -225,7 +224,7 @@ const ManageSiteContent = () => {
       )}
 
       {!isFormVisible && documents.length === 0 && (
-        <div className="bg-light/50 dark:bg-primary/50 backdrop-blur-sm rounded-2xl p-8 sm:p-12 border border-primary/10 dark:border-light/10 text-center">
+  <div className="backdrop-blur-sm rounded-2xl p-8 sm:p-12 border border-primary/10 dark:border-light/10 text-center">
           <FiAlertTriangle className="w-12 h-12 text-primary/40 dark:text-light/40 mx-auto mb-4" />
           <h3 className="text-lg font-semibold text-primary dark:text-light">Aucun Contenu Trouvé</h3>
           <p className="text-primary/60 dark:text-light/60 mt-2">Les contenus du site n'ont pas encore été configurés.</p>

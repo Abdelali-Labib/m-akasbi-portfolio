@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { links } from "../links";
-import ThemeToggle from "../../ui/ThemeToggle";
+import { links } from "./links";
+import ThemeToggle from "../ui/ThemeToggle";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FiX } from "react-icons/fi";

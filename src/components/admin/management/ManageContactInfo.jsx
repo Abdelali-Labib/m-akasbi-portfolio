@@ -21,7 +21,6 @@ const ManageContactInfo = () => {
         setContacts(result.data);
       }
     } catch (error) {
-      console.error('Error fetching contact info:', error);
     } finally {
       setLoading(false);
     }
@@ -59,7 +58,6 @@ const ManageContactInfo = () => {
       setIsFormVisible(false);
       setCurrentItem(null);
     } catch (error) {
-      console.error('Error submitting form:', error);
       alert('Erreur lors de la sauvegarde. Veuillez réessayer.');
     }
   };

@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { dbAdmin as db } from '@/lib/firebase-admin';
 
 /**
- * GET - Fetch all siteContent documents
+ * GET: Returns all siteContent documents.
  */
 export async function GET() {
   try {
@@ -24,7 +24,7 @@ export async function GET() {
 }
 
 /**
- * PUT - Update or create a siteContent document
+ * PUT: Updates or creates a siteContent document.
  */
 export async function PUT(request) {
   try {
@@ -37,7 +37,7 @@ export async function PUT(request) {
       );
     }
 
-    // Add timestamp
+  // Add/update timestamp for tracking changes
     const documentData = {
       ...data,
       updatedAt: new Date().toISOString()
@@ -60,7 +60,7 @@ export async function PUT(request) {
 }
 
 /**
- * DELETE - Delete a siteContent document
+ * DELETE: Removes a siteContent document by ID.
  */
 export async function DELETE(request) {
   try {

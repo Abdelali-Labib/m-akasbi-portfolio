@@ -86,7 +86,6 @@ const SiteContentForm = ({ initialData, onSubmit, onCancel }) => {
       }, 2000);
       
     } catch (error) {
-      console.error('Upload error:', error);
       
       setErrorModal({
         isOpen: true,
@@ -118,7 +117,7 @@ const SiteContentForm = ({ initialData, onSubmit, onCancel }) => {
                 type="text"
                 value={formData.subtitle || ''}
                 onChange={(e) => setFormData({...formData, subtitle: e.target.value})}
-                className="w-full px-3 py-2 border border-primary/30 dark:border-light/30 rounded-lg bg-light/50 dark:bg-primary/50 text-primary dark:text-light focus:border-accent focus:ring-2 focus:ring-accent/20"
+                className="w-full px-3 py-2 border border-primary/30 dark:border-light/30 rounded-lg text-primary dark:text-light focus:border-accent focus:ring-2 focus:ring-accent/20"
               />
             </div>
             <div>
@@ -129,7 +128,7 @@ const SiteContentForm = ({ initialData, onSubmit, onCancel }) => {
                 value={formData.description || ''}
                 onChange={(e) => setFormData({...formData, description: e.target.value})}
                 rows={4}
-                className="w-full px-3 py-2 border border-primary/30 dark:border-light/30 rounded-lg bg-light/50 dark:bg-primary/50 text-primary dark:text-light focus:border-accent focus:ring-2 focus:ring-accent/20"
+                className="w-full px-3 py-2 border border-primary/30 dark:border-light/30 rounded-lg text-primary dark:text-light focus:border-accent focus:ring-2 focus:ring-accent/20"
               />
             </div>
           </>
@@ -144,7 +143,7 @@ const SiteContentForm = ({ initialData, onSubmit, onCancel }) => {
             {formData.items && Array.isArray(formData.items) ? (
               <div className="space-y-3">
                 {formData.items.map((item, index) => (
-                  <div key={index} className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3 border border-primary/30 dark:border-light/30 rounded-lg bg-light/50 dark:bg-primary/50">
+                  <div key={index} className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3 border border-primary/30 dark:border-light/30 rounded-lg">
                     <input
                       type="number"
                       value={item.number || ''}
@@ -153,7 +152,7 @@ const SiteContentForm = ({ initialData, onSubmit, onCancel }) => {
                         newItems[index] = {...item, number: parseInt(e.target.value) || 0};
                         setFormData({...formData, items: newItems});
                       }}
-                      className="px-2 py-1 border border-primary/30 dark:border-light/30 rounded bg-light/50 dark:bg-primary/50 text-primary dark:text-light focus:border-accent focus:ring-1 focus:ring-accent/20"
+                          className="px-2 py-1 border border-primary/30 dark:border-light/30 rounded text-primary dark:text-light focus:border-accent focus:ring-1 focus:ring-accent/20"
                     />
                     <input
                       type="text"
@@ -163,7 +162,7 @@ const SiteContentForm = ({ initialData, onSubmit, onCancel }) => {
                         newItems[index] = {...item, text: e.target.value};
                         setFormData({...formData, items: newItems});
                       }}
-                      className="px-2 py-1 border border-primary/30 dark:border-light/30 rounded bg-light/50 dark:bg-primary/50 text-primary dark:text-light focus:border-accent focus:ring-1 focus:ring-accent/20"
+                          className="px-2 py-1 border border-primary/30 dark:border-light/30 rounded text-primary dark:text-light focus:border-accent focus:ring-1 focus:ring-accent/20"
                     />
                     <button
                       type="button"
@@ -171,7 +170,7 @@ const SiteContentForm = ({ initialData, onSubmit, onCancel }) => {
                         const newItems = formData.items.filter((_, i) => i !== index);
                         setFormData({...formData, items: newItems});
                       }}
-                      className="sm:col-span-2 px-2 py-1 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded transition-colors"
+                          className="sm:col-span-2 px-2 py-1 text-red-500 rounded transition-colors"
                     >
                       <FiX className="w-4 h-4 inline mr-1" />
                       Supprimer
@@ -241,7 +240,7 @@ const SiteContentForm = ({ initialData, onSubmit, onCancel }) => {
                 <label className="block text-sm font-medium text-primary dark:text-light mb-2">
                   Photo de profil actuelle
                 </label>
-                <div className="mb-3 p-3 bg-light/70 dark:bg-primary/70 rounded-lg border border-primary/20 dark:border-light/20">
+                      <div className="mb-3 p-3 rounded-lg border border-primary/20 dark:border-light/20">
                   <div className="flex items-center justify-between">
                     <div>
                       <span className="text-sm text-primary/70 dark:text-light/70">Fichier actuel: </span>
@@ -270,7 +269,7 @@ const SiteContentForm = ({ initialData, onSubmit, onCancel }) => {
                     type="text"
                     value={formData.picture_name || ''}
                     onChange={(e) => setFormData({...formData, picture_name: e.target.value})}
-                    className="flex-1 px-3 py-2 border border-primary/30 dark:border-light/30 rounded-lg bg-light/50 dark:bg-primary/50 text-primary dark:text-light focus:border-accent focus:ring-2 focus:ring-accent/20"
+                          className="flex-1 px-3 py-2 border border-primary/30 dark:border-light/30 rounded-lg text-primary dark:text-light focus:border-accent focus:ring-2 focus:ring-accent/20"
                   />
                   <button
                     type="button"
@@ -331,7 +330,7 @@ const SiteContentForm = ({ initialData, onSubmit, onCancel }) => {
                 <label className="block text-sm font-medium text-primary dark:text-light mb-2">
                   CV actuel
                 </label>
-                <div className="mb-3 p-3 bg-light/70 dark:bg-primary/70 rounded-lg border border-primary/20 dark:border-light/20">
+                        <div className="mb-3 p-3 rounded-lg border border-primary/20 dark:border-light/20">
                   <div className="flex items-center justify-between">
                     <div>
                       <span className="text-sm text-primary/70 dark:text-light/70">Fichier actuel: </span>
@@ -360,7 +359,7 @@ const SiteContentForm = ({ initialData, onSubmit, onCancel }) => {
                     type="text"
                     value={formData.cv_path || ''}
                     onChange={(e) => setFormData({...formData, cv_path: e.target.value})}
-                    className="flex-1 px-3 py-2 border border-primary/30 dark:border-light/30 rounded-lg bg-light/50 dark:bg-primary/50 text-primary dark:text-light focus:border-accent focus:ring-2 focus:ring-accent/20"
+                            className="flex-1 px-3 py-2 border border-primary/30 dark:border-light/30 rounded-lg text-primary dark:text-light focus:border-accent focus:ring-2 focus:ring-accent/20"
                   />
                   <button
                     type="button"
@@ -439,7 +438,7 @@ const SiteContentForm = ({ initialData, onSubmit, onCancel }) => {
             <select
               value={formData.type}
               onChange={(e) => setFormData({...formData, type: e.target.value})}
-              className="w-full px-3 py-2 border border-primary/30 dark:border-light/30 rounded-lg bg-light/50 dark:bg-primary/50 text-primary dark:text-light focus:border-accent focus:ring-2 focus:ring-accent/20"
+              className="w-full px-3 py-2 border border-primary/30 dark:border-light/30 rounded-lg text-primary dark:text-light focus:border-accent focus:ring-2 focus:ring-accent/20"
             >
               <option value="home">Contenu Accueil</option>
               <option value="statistics">Statistiques</option>
@@ -464,7 +463,7 @@ const SiteContentForm = ({ initialData, onSubmit, onCancel }) => {
           <button
             type="button"
             onClick={onCancel}
-            className="px-6 py-3 bg-primary/70 dark:bg-light/70 text-light dark:text-primary rounded-lg hover:bg-primary/80 dark:hover:bg-light/80 transition-colors flex items-center gap-2"
+            className="px-6 py-3 text-light dark:text-primary rounded-lg transition-colors flex items-center gap-2"
           >
             <FiX className="w-4 h-4" />
             Annuler

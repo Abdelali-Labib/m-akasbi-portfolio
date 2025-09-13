@@ -16,7 +16,7 @@ const LoginClient = () => {
   }, [user, router]);
 
   const handleLogin = async () => {
-    if (setAuthError) setAuthError(null); // Clear previous errors
+    if (setAuthError) setAuthError(null);
     try {
       await signInWithGoogle();
     } catch (error) {

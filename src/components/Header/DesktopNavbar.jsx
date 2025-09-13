@@ -1,7 +1,7 @@
 "use client";
 
-import { links } from "../links";
-import ThemeToggle from "../../ui/ThemeToggle";
+import { links } from "./links";
+import ThemeToggle from "../ui/ThemeToggle";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useNavbarVisibility } from "@/Providers/NavbarVisibilityContext";
@@ -66,11 +66,11 @@ const DesktopNavbar = () => {
           <ThemeToggle />
           
           <Link href="/contact" className={`group relative ${pathname === '/contact' ? 'active-contact' : ''}`}>
-                <button className={`relative overflow-hidden rounded-full border-2 transition-all duration-500 font-bold text-sm lg:text-base focus:outline-none focus:ring-2 focus:ring-accent/50 focus:ring-offset-2 focus:ring-offset-light dark:focus:ring-offset-primary ${ 
-                  pathname === '/contact' 
-                    ? 'border-accent/50 text-accent dark:text-accent cursor-default'
-                    : 'border-accent bg-gradient-to-r from-accent via-accent/95 to-accent/90 text-light shadow-lg hover:shadow-xl hover:shadow-accent/25 hover:scale-105 hover:-translate-y-0.5'
-                } px-4 py-2 lg:px-6 lg:py-3`}>
+              <button className={`relative overflow-hidden rounded-full border-2 transition-all duration-500 font-bold text-sm lg:text-base focus:outline-none focus:ring-2 focus:ring-accent/50 focus:ring-offset-2 focus:ring-offset-light dark:focus:ring-offset-primary ${ 
+                pathname === '/contact' 
+                  ? 'border-accent/50 text-accent dark:text-accent cursor-default'
+                  : 'border-accent bg-gradient-to-r from-accent via-accent/95 to-accent/90 text-light shadow-lg hover:shadow-xl hover:shadow-accent/25 hover:scale-105 hover:-translate-y-0.5'
+              } px-4 py-2 lg:px-6 lg:py-3`}>
               <span className="relative z-10 flex items-center gap-2">
                 Contactez moi
                

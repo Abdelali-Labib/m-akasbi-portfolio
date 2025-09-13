@@ -19,7 +19,6 @@ const useUnreadMessages = () => {
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
       setUnreadCount(querySnapshot.size);
     }, (error) => {
-      console.error("Error fetching unread messages:", error);
       setUnreadCount(0);
     });
 

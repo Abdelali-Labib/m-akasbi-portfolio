@@ -5,12 +5,9 @@ import { FiAlertTriangle, FiRefreshCw, FiHome, FiMail } from 'react-icons/fi';
 
 export default function Error({ error, reset }) {
   useEffect(() => {
-    // Log the error to an error reporting service
-    console.error('Application Error:', error);
   }, [error]);
 
   const handleRefresh = () => {
-    // Reset the error boundary and try again
     reset();
   };
 

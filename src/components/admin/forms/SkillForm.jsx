@@ -83,7 +83,6 @@ const SkillForm = ({ initialData, onSubmit, onCancel }) => {
       }, 2000);
       
     } catch (error) {
-      console.error('Upload error:', error);
       
       setErrorModal({
         isOpen: true,
@@ -113,12 +112,12 @@ const SkillForm = ({ initialData, onSubmit, onCancel }) => {
   };
 
   return (
-    <div className="border border-primary/20 dark:border-light/20 rounded-xl p-4 sm:p-6 mb-8 bg-light/30 dark:bg-primary/10">
+  <div className="border border-primary/20 dark:border-light/20 rounded-xl p-4 sm:p-6 mb-8">
       <h2 className="text-lg sm:text-xl font-semibold mb-4 sm:mb-6 text-primary dark:text-light">{initialData ? 'Modifier Compétence' : 'Ajouter Compétence'}</h2>
       <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label className="block text-xs sm:text-sm font-medium mb-2 text-primary dark:text-light">Nom de la Compétence</label>
-            <input name="name" value={formData.name} onChange={handleInputChange} className="w-full px-3 py-2 rounded-lg border border-primary/30 dark:border-light/30 bg-light/50 dark:bg-primary/50 text-primary dark:text-light focus:border-accent focus:ring-2 focus:ring-accent/20" required />
+            <input name="name" value={formData.name} onChange={handleInputChange} className="w-full px-3 py-2 rounded-lg border border-primary/30 dark:border-light/30 text-primary dark:text-light focus:border-accent focus:ring-2 focus:ring-accent/20" required />
           </div>
           <div className="space-y-4">
             {formData.icon && (
@@ -126,7 +125,7 @@ const SkillForm = ({ initialData, onSubmit, onCancel }) => {
                 <label className="block text-sm font-medium text-primary dark:text-light mb-2">
                   Icône actuelle
                 </label>
-                <div className="mb-3 p-3 bg-light/70 dark:bg-primary/70 rounded-lg border border-primary/20 dark:border-light/20">
+                <div className="mb-3 p-3 rounded-lg border border-primary/20 dark:border-light/20">
                   <div className="flex items-center justify-between mb-3">
                     <div>
                       <span className="text-sm text-primary/70 dark:text-light/70">Fichier actuel: </span>
@@ -143,7 +142,7 @@ const SkillForm = ({ initialData, onSubmit, onCancel }) => {
                   </div>
                   {/* Image Preview */}
                   <div className="flex justify-center">
-                    <div className="relative w-16 h-16 bg-light dark:bg-primary rounded-lg border border-primary/20 dark:border-light/20 overflow-hidden">
+                    <div className="relative w-16 h-16 rounded-lg border border-primary/20 dark:border-light/20 overflow-hidden">
                       <img
                         src={formData.icon.startsWith('http') ? formData.icon : `https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/${formData.icon}`}
                         alt="Aperçu de l'icône"
@@ -153,7 +152,7 @@ const SkillForm = ({ initialData, onSubmit, onCancel }) => {
                           e.target.nextSibling.style.display = 'flex';
                         }}
                       />
-                      <div className="absolute inset-0 flex items-center justify-center bg-primary/10 dark:bg-light/10" style={{ display: 'none' }}>
+                      <div className="absolute inset-0 flex items-center justify-center" style={{ display: 'none' }}>
                         <FiImage className="w-6 h-6 text-primary/40 dark:text-light/40" />
                       </div>
                     </div>
@@ -172,7 +171,7 @@ const SkillForm = ({ initialData, onSubmit, onCancel }) => {
                     type="text"
                     value={formData.icon || ''}
                     onChange={(e) => setFormData({...formData, icon: e.target.value})}
-                    className="flex-1 px-3 py-2 border border-primary/30 dark:border-light/30 rounded-lg bg-light/50 dark:bg-primary/50 text-primary dark:text-light focus:border-accent focus:ring-2 focus:ring-accent/20"
+                    className="flex-1 px-3 py-2 border border-primary/30 dark:border-light/30 rounded-lg text-primary dark:text-light focus:border-accent focus:ring-2 focus:ring-accent/20"
                   />
                   <button
                     type="button"
@@ -211,7 +210,7 @@ const SkillForm = ({ initialData, onSubmit, onCancel }) => {
                 </label>
                 {uploadProgress.icon !== undefined && (
                   <div className="mt-2">
-                    <div className="w-full bg-primary/20 dark:bg-light/20 rounded-full h-2">
+                    <div className="w-full rounded-full h-2">
                       <div 
                         className="bg-accent h-2 rounded-full transition-all duration-300" 
                         style={{ width: `${uploadProgress.icon}%` }}
@@ -224,7 +223,7 @@ const SkillForm = ({ initialData, onSubmit, onCancel }) => {
           </div>
           <div>
             <label className="block text-xs sm:text-sm font-medium mb-2 text-primary dark:text-light">Catégorie</label>
-            <select name="category" value={formData.category} onChange={handleInputChange} className="w-full px-3 py-2 rounded-lg border border-primary/30 dark:border-light/30 bg-light/50 dark:bg-primary/50 text-primary dark:text-light focus:border-accent focus:ring-2 focus:ring-accent/20" required>
+            <select name="category" value={formData.category} onChange={handleInputChange} className="w-full px-3 py-2 rounded-lg border border-primary/30 dark:border-light/30 text-primary dark:text-light focus:border-accent focus:ring-2 focus:ring-accent/20" required>
               <option value="technical">Outils Techniques</option>
               <option value="comprehensive">Compétences Générales</option>
               <option value="language">Langues</option>
@@ -233,7 +232,7 @@ const SkillForm = ({ initialData, onSubmit, onCancel }) => {
 
           <div>
             <label className="block mb-2 text-xs sm:text-sm font-medium text-primary dark:text-light">Niveau: <span className="text-accent font-semibold">{formData.percentage}%</span></label>
-            <input type="range" name="percentage" min="0" max="100" value={formData.percentage} onChange={handleInputChange} className="w-full h-2 bg-primary/20 rounded-lg appearance-none cursor-pointer dark:bg-light/20 accent-accent" />
+            <input type="range" name="percentage" min="0" max="100" value={formData.percentage} onChange={handleInputChange} className="w-full h-2 rounded-lg appearance-none cursor-pointer accent-accent" />
           </div>
 
           <div className="sm:col-span-2 flex flex-col sm:flex-row items-center gap-3 pt-4">
@@ -245,7 +244,7 @@ const SkillForm = ({ initialData, onSubmit, onCancel }) => {
               <FiSave className="w-4 h-4" />
               {saving ? 'Sauvegarde...' : (initialData ? 'Mettre à Jour' : 'Sauvegarder')}
             </button>
-            <button type="button" onClick={onCancel} className="w-full sm:w-auto px-6 py-3 bg-primary/70 dark:bg-light/70 text-light dark:text-primary rounded-lg hover:bg-primary/80 dark:hover:bg-light/80 transition-colors flex items-center gap-2">
+            <button type="button" onClick={onCancel} className="w-full sm:w-auto px-6 py-3 text-light dark:text-primary rounded-lg transition-colors flex items-center gap-2">
               <FiX className="w-4 h-4" />
               Annuler
             </button>

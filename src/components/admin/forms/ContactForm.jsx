@@ -71,7 +71,7 @@ const ContactForm = ({ initialData, onSubmit, onCancel }) => {
 
 
   return (
-    <div className="border border-primary/20 dark:border-light/20 rounded-lg p-6 mb-8 bg-white dark:bg-primary">
+  <div className="border border-primary/20 dark:border-light/20 rounded-lg p-6 mb-8">
       <h2 className="text-xl font-semibold mb-6 text-primary dark:text-light">
         {initialData ? 'Modifier Contact' : 'Ajouter Contact'}
       </h2>
@@ -85,7 +85,7 @@ const ContactForm = ({ initialData, onSubmit, onCancel }) => {
             value={formData.title}
             onChange={handleInputChange}
             required
-            className="w-full px-3 py-2 rounded border border-primary/20 dark:border-light/20 bg-white dark:bg-primary text-primary dark:text-light"
+            className="w-full px-3 py-2 rounded border border-primary/20 dark:border-light/20 text-primary dark:text-light"
           />
         </div>
 
@@ -97,7 +97,7 @@ const ContactForm = ({ initialData, onSubmit, onCancel }) => {
             value={formData.value}
             onChange={handleInputChange}
             required
-            className="w-full px-3 py-2 rounded border border-primary/20 dark:border-light/20 bg-white dark:bg-primary text-primary dark:text-light"
+            className="w-full px-3 py-2 rounded border border-primary/20 dark:border-light/20 text-primary dark:text-light"
           />
         </div>
 

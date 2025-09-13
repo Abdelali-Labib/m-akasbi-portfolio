@@ -80,7 +80,6 @@ const ImageUpload = ({ value, onChange, label, placeholder = "Nom de l'image", r
         throw new Error(uploadResult.error || 'Erreur lors du téléchargement');
       }
     } catch (err) {
-      console.error('Upload error:', err);
       setError(err.message || 'Erreur lors du téléchargement');
     } finally {
       setUploading(false);

@@ -83,6 +83,7 @@ const SkillCard = ({ skill, index, animatedPercentage }) => {
                       alt={skill.name}
                       width={72}
                       height={72}
+                      sizes="(max-width: 640px) 48px, (max-width: 1024px) 64px, 72px"
                       className="h-12 w-12 sm:h-16 sm:w-16 lg:h-18 lg:w-18 transition-transform duration-300 group-hover:scale-110"
                       onError={handleImageError}
                       onLoad={handleImageLoad}

@@ -47,7 +47,6 @@ export async function POST(request) {
     });
 
   } catch (error) {
-    console.error('Cloudinary upload error:', error);
     return Response.json({ 
       success: false,
       error: error.message || 'Upload failed' 

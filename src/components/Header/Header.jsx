@@ -1,7 +1,7 @@
 "use client";
 
-import DesktopNavbar from "./Navbars/DesktopNavbar";
-import MobileNavbar from "./Navbars/MobileNavbar";
+import DesktopNavbar from "./DesktopNavbar";
+import MobileNavbar from "./MobileNavbar";
 
 function Header() {
   return (

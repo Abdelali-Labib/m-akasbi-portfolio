@@ -4,17 +4,17 @@ import Link from "next/link";
 import { FaLinkedinIn, FaFacebookF, FaInstagram, FaYoutube } from "react-icons/fa";
 
 /**
- * Social media component with configurable links
+ * Social media component for rendering configurable links.
  * @param {Object} props - Component props
- * @param {Object} props.socialLinks - Social media links from Firestore
- * @param {string} props.containerStyles - Additional container styles
- * @param {string} props.iconStyles - Additional icon styles
+ * @param {Object} props.socialLinks - Social media links
+ * @param {string} props.containerStyles - Container styles
+ * @param {string} props.iconStyles - Icon styles
  */
 const SocialMedia = ({ socialLinks, containerStyles = "", iconStyles = "" }) => {
-  // Ensure socialLinks is an object to prevent errors on null/undefined
+  // Defensive: fallback to empty object if socialLinks is null/undefined
   const links = socialLinks || {};
 
-  // Default social media configuration with icons and styling
+  // Social media configuration with icons and styles
   const socialConfig = [
     {
       name: "Instagram",
@@ -50,7 +50,7 @@ const SocialMedia = ({ socialLinks, containerStyles = "", iconStyles = "" }) => 
     },
   ];
 
-  // Filter out social links that don't have URLs
+  // Only include social links with valid URLs
   const activeSocialLinks = socialConfig.filter(config => links[config.key]);
 
   return (

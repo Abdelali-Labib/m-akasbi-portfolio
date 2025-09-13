@@ -84,7 +84,6 @@ const ManageCloudinary = () => {
         setMessage(data.error || 'Erreur lors du chargement des fichiers');
       }
     } catch (error) {
-      console.error('Error fetching files:', error);
       setMessage('Erreur de connexion');
     } finally {
       setLoading(false);
@@ -117,7 +116,6 @@ const ManageCloudinary = () => {
         setMessage(result.error || 'Erreur lors de l\'upload');
       }
     } catch (error) {
-      console.error('Error uploading file:', error);
       setMessage('Erreur lors de l\'upload');
     } finally {
       setUploading(false);
@@ -179,7 +177,6 @@ const ManageCloudinary = () => {
         setDeleteModal(prev => ({ ...prev, loading: false }));
       }
     } catch (error) {
-      console.error('Error deleting file(s):', error);
       setMessage('Erreur lors de la suppression');
       setDeleteModal(prev => ({ ...prev, loading: false }));
     }
@@ -240,7 +237,6 @@ const ManageCloudinary = () => {
         }));
       }
     } catch (error) {
-      console.error('Error renaming file:', error);
       setRenameModal(prev => ({ 
         ...prev, 
         loading: false, 

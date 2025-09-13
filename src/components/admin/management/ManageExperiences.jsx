@@ -90,7 +90,6 @@ const ManageExperiences = () => {
       await fetchExperiences();
       setDeleteModal({ isOpen: false, experience: null, loading: false });
     } catch (error) {
-      console.error('Error deleting experience:', error);
       setDeleteModal(prev => ({ ...prev, loading: false }));
     }
   };

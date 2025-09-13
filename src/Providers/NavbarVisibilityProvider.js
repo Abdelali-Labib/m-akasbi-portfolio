@@ -5,7 +5,7 @@ import Lenis from 'lenis';
 import { NavbarVisibilityContext } from './NavbarVisibilityContext';
 
 /**
- * Consolidated navbar visibility provider with Lenis smooth scrolling and initial animation
+ * Navbar visibility provider with Lenis smooth scrolling and initial animation.
  */
 export const NavbarVisibilityProvider = ({ children }) => {
   const [isNavbarVisible, setIsNavbarVisible] = useState(true);
@@ -13,7 +13,7 @@ export const NavbarVisibilityProvider = ({ children }) => {
   const [hasAnimatedIn, setHasAnimatedIn] = useState(false);
   const lastY = useRef(0);
 
-  // Initial animation effect
+  // Trigger initial navbar animation after mount
   useEffect(() => {
     const timer = setTimeout(() => {
       setHasAnimatedIn(true);
@@ -32,7 +32,7 @@ export const NavbarVisibilityProvider = ({ children }) => {
       const scrollY = e.scroll;
       const direction = scrollY > lastY.current ? 1 : -1;
 
-      // Show navbar when scrolling up or at top, hide when scrolling down
+  // Show navbar when scrolling up or near top; hide when scrolling down
       if (direction === -1 || scrollY < 100) {
         setIsNavbarVisible(true);
       } else {

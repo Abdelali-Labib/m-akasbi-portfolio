@@ -33,7 +33,6 @@ export async function POST(request) {
     } catch (error) {
       // File doesn't exist, continue with upload
       if (error.http_code !== 404) {
-        console.error('Error checking file existence:', error);
       }
     }
 
@@ -69,7 +68,6 @@ export async function POST(request) {
     });
 
   } catch (error) {
-    console.error('Upload error:', error);
     return NextResponse.json(
       { error: 'Upload failed', details: error.message },
       { status: 500 }

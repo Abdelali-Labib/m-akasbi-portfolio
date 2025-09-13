@@ -90,7 +90,6 @@ export async function PATCH(request) {
     });
 
   } catch (error) {
-    console.error('Rename error:', error);
     
     // Handle specific Cloudinary errors
     if (error.message && error.message.includes('already exists')) {

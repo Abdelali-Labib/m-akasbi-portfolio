@@ -17,7 +17,6 @@ import {
 } from 'recharts';
 import { 
   FiUsers, 
-  FiEye, 
   FiDownload,
   FiGlobe,
   FiSmartphone,
@@ -26,8 +25,7 @@ import {
   FiRefreshCw,
   FiTrendingUp,
   FiCalendar,
-  FiExternalLink,
-  FiChrome
+  FiExternalLink
 } from 'react-icons/fi';
 import LoadingSpinner from '../ui/LoadingSpinner';
 
@@ -128,11 +126,7 @@ const EnhancedAnalyticsDashboard = ({ analyticsData }) => {
       count: Math.round(referrer.count * periodRatio)
     })).filter(referrer => referrer.count > 0);
 
-    // Filter and scale browsers based on the period ratio
-    const filteredBrowsers = data.browsers.map(browser => ({
-      ...browser,
-      count: Math.round(browser.count * periodRatio)
-    })).filter(browser => browser.count > 0);
+    // Remove browser tracking - no longer needed
     
     // Calculate totals for the filtered period
     const totalVisitors = filteredVisitorsByDay.reduce((sum, day) => sum + day.visitors, 0);
@@ -146,8 +140,7 @@ const EnhancedAnalyticsDashboard = ({ analyticsData }) => {
       cvDownloadsByDay: filteredCvDownloadsByDay,
       topCountries: filteredCountries,
       devices: filteredDevices,
-      topReferrers: filteredReferrers,
-      browsers: filteredBrowsers
+      topReferrers: filteredReferrers
     };
   };
 
@@ -159,8 +152,7 @@ const EnhancedAnalyticsDashboard = ({ analyticsData }) => {
     cvDownloadsByDay: [],
     topCountries: [],
     devices: [],
-    topReferrers: [],
-    browsers: []
+    topReferrers: []
   };
 
   // Apply date range filtering
@@ -198,7 +190,6 @@ const EnhancedAnalyticsDashboard = ({ analyticsData }) => {
     try {
       await new Promise(resolve => setTimeout(resolve, 300)); // Simulate loading
     } catch (error) {
-      console.error('Error filtering data:', error);
     } finally {
       setLoading(false);
     }
@@ -210,7 +201,6 @@ const EnhancedAnalyticsDashboard = ({ analyticsData }) => {
     try {
       window.location.reload();
     } catch (error) {
-      console.error('Error refreshing data:', error);
     } finally {
       setRefreshing(false);
     }

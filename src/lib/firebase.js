@@ -1,7 +1,7 @@
 import { getApps, initializeApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
-import { getAnalytics, isSupported } from 'firebase/analytics';
+ 
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -24,14 +24,4 @@ if (!getApps().length) {
 const db = getFirestore(app);
 const auth = getAuth(app);
 
-let analytics;
-if (typeof window !== 'undefined') {
-  // Initialize analytics in both development and production for testing
-  isSupported().then((supported) => {
-    if (supported) {
-      analytics = getAnalytics(app);
-    }
-  });
-}
-
-export { db, auth, analytics };
+export { db, auth };

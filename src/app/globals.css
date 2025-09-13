@@ -26,8 +26,7 @@ body.modal-open {
   }
 
   body {
-    @apply scrollbar scroll-smooth bg-light font-primary leading-loose text-black dark:bg-primary dark:text-white;
-    font-family: var(--font-PTserif);
+  @apply scrollbar scroll-smooth bg-light font-primary leading-loose text-black dark:bg-primary dark:text-white;
   }
 
   .h1,
@@ -56,7 +55,7 @@ body.modal-open {
   }
 
   .page-background {
-    @apply absolute inset-0 overflow-hidden pointer-events-none;
+  @apply absolute inset-0 overflow-hidden pointer-events-none;
   }
 
   
@@ -65,11 +64,11 @@ body.modal-open {
   }
 
   .badge-top-align {
-    @apply pt-2 sm:pt-4 md:pt-6 lg:pt-8 xl:pt-10;
+  @apply pt-2 sm:pt-4 md:pt-6 lg:pt-8 xl:pt-10;
   }
 
   .enhanced-badge {
-    @apply inline-flex items-center rounded-full border border-accent/30 bg-gradient-to-r from-accent/15 to-accent/5 px-3 py-1.5 sm:px-4 sm:py-2 md:px-6 md:py-3 text-xs sm:text-sm font-semibold text-accent backdrop-blur-sm shadow-lg;
+  @apply inline-flex items-center rounded-full border border-accent/30 bg-gradient-to-r from-accent/15 to-accent/5 px-3 py-1.5 sm:px-4 sm:py-2 md:px-6 md:py-3 text-xs sm:text-sm font-semibold text-accent backdrop-blur-sm shadow-lg;
   }
 
   .heading-section {
@@ -77,87 +76,87 @@ body.modal-open {
   }
 
   .main-heading {
-    @apply block text-gray-600 dark:text-gray-400 font-normal text-base sm:text-lg md:text-xl lg:text-2xl;
+  @apply block text-gray-600 dark:text-gray-400 font-normal text-base sm:text-lg md:text-xl lg:text-2xl;
   }
 
   .accent-heading {
-    @apply typing block bg-gradient-to-r from-accent via-accent/90 to-accent/80 bg-clip-text text-transparent font-bold text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl;
+  @apply typing block bg-gradient-to-r from-accent via-accent/90 to-accent/80 bg-clip-text text-transparent font-bold text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl;
   }
 
   .subtitle {
-    @apply text-base sm:text-lg md:text-xl text-accent font-medium;
+  @apply text-base sm:text-lg md:text-xl text-accent font-medium;
   }
 
   .description-section {
-    @apply space-y-3 sm:space-y-4 md:space-y-6;
+  @apply space-y-3 sm:space-y-4 md:space-y-6;
   }
 
   .description-text {
-    @apply text-sm sm:text-base md:text-lg leading-relaxed text-gray-600 dark:text-gray-300 xl:text-left;
+  @apply text-sm sm:text-base md:text-lg leading-relaxed text-gray-600 dark:text-gray-300 xl:text-left;
   }
 
   .action-buttons {
-    @apply flex flex-col sm:flex-row gap-4 sm:gap-6 items-center sm:items-stretch;
+  @apply flex flex-col sm:flex-row gap-4 sm:gap-6 items-center sm:items-stretch;
   }
 
   .btn-primary-cta {
-    @apply relative overflow-hidden rounded-full border-2 border-accent bg-gradient-to-r from-accent to-accent/90 px-6 py-3 sm:px-8 sm:py-4 font-bold text-white shadow-xl transition-all duration-300 hover:shadow-2xl hover:scale-105;
+  @apply relative overflow-hidden rounded-full border-2 border-accent bg-gradient-to-r from-accent to-accent/90 px-6 py-3 sm:px-8 sm:py-4 font-bold text-white shadow-xl transition-all duration-300 hover:shadow-2xl hover:scale-105;
   }
 
   .btn-secondary-cta {
-    @apply relative overflow-hidden rounded-full border-2 border-accent/30 bg-gradient-to-r from-accent/10 to-accent/5 px-6 py-3 sm:px-8 sm:py-4 font-bold text-accent shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-105 hover:border-accent/50 hover:bg-accent/20;
+  @apply relative overflow-hidden rounded-full border-2 border-accent/30 bg-gradient-to-r from-accent/10 to-accent/5 px-6 py-3 sm:px-8 sm:py-4 font-bold text-accent shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-105 hover:border-accent/50 hover:bg-accent/20;
   }
 
   .social-section {
-    @apply text-center space-y-3 sm:space-y-4;
+  @apply text-center space-y-3 sm:space-y-4;
   }
 
   .social-label {
-    @apply text-sm sm:text-base text-primary/60 dark:text-light/60;
+  @apply text-sm sm:text-base text-primary/60 dark:text-light/60;
   }
 
   .social-container {
-    @apply flex justify-center;
+  @apply flex justify-center;
   }
 
   .section-spacing {
-    @apply mt-12 sm:mt-16 md:mt-20;
+  @apply mt-12 sm:mt-16 md:mt-20;
   }
 
   .header-container {
-    @apply container mx-auto flex items-center justify-between px-3 py-3 sm:px-4 sm:py-4 md:px-6 md:py-5 lg:px-6 lg:py-6 xl:px-8 xl:py-6;
+  @apply container mx-auto flex items-center justify-between px-3 py-3 sm:px-4 sm:py-4 md:px-6 md:py-5 lg:px-6 lg:py-6 xl:px-8 xl:py-6;
   }
 
   .header-logo {
-    @apply text-lg sm:text-xl md:text-2xl font-bold tracking-tight transition-all duration-500 text-primary dark:text-light;
+  @apply text-lg sm:text-xl md:text-2xl font-bold tracking-tight transition-all duration-500 text-primary dark:text-light;
   }
 
   .header-nav {
-    @apply hidden lg:flex items-center gap-4 xl:gap-6;
+  @apply hidden lg:flex items-center gap-4 xl:gap-6;
   }
 
   .header-nav-link {
-    @apply relative font-semibold transition-all duration-300 hover:text-accent text-sm xl:text-base px-3 py-2 rounded-lg;
+  @apply relative font-semibold transition-all duration-300 hover:text-accent text-sm xl:text-base px-3 py-2 rounded-lg;
   }
 
   .header-actions {
-    @apply flex items-center gap-3 sm:gap-4 md:gap-6 lg:gap-8;
+  @apply flex items-center gap-3 sm:gap-4 md:gap-6 lg:gap-8;
   }
 
   .header-cta-button {
-    @apply relative rounded-full border-2 border-accent bg-gradient-to-r from-accent to-accent/90 px-3 py-1.5 sm:px-4 sm:py-2 md:px-6 md:py-2.5 lg:px-8 lg:py-3 font-bold text-light transition-all duration-300 hover:shadow-lg hover:scale-105 hover:from-accent/90 hover:to-accent text-xs sm:text-sm md:text-base;
+  @apply relative rounded-full border-2 border-accent bg-gradient-to-r from-accent to-accent/90 px-3 py-1.5 sm:px-4 sm:py-2 md:px-6 md:py-2.5 lg:px-8 lg:py-3 font-bold text-light transition-all duration-300 hover:shadow-lg hover:scale-105 hover:from-accent/90 hover:to-accent text-xs sm:text-sm md:text-base;
   }
 
   .mobile-header {
-    @apply fixed top-0 z-50 flex w-full items-center justify-between transition-all duration-700 ease-out lg:hidden px-3 py-3 sm:px-4 sm:py-4 md:px-6 md:py-5;
+  @apply fixed top-0 z-50 flex w-full items-center justify-between transition-all duration-700 ease-out lg:hidden px-3 py-3 sm:px-4 sm:py-4 md:px-6 md:py-5;
   }
 
   .mobile-header-logo {
-    @apply text-base sm:text-lg md:text-xl font-bold transition-all duration-500 hover:scale-105 text-primary dark:text-light;
+  @apply text-base sm:text-lg md:text-xl font-bold transition-all duration-500 hover:scale-105 text-primary dark:text-light;
   }
 
   .mobile-menu-button {
-    @apply focus:outline-none transition-all duration-300 hover:scale-110;
+  @apply focus:outline-none transition-all duration-300 hover:scale-110;
   }
 }
 
@@ -198,7 +197,6 @@ body.modal-open {
   }
 }
 
-/* Removed duplicate bounce animation - using Tailwind's built-in */
 
 @keyframes fadeInLeft {
   from {
@@ -404,7 +402,6 @@ body.modal-open {
   }
 }
 
-/* Consolidated animation utilities */
 .animate-fade-in-up {
   animation: fadeInUp 0.6s ease-out forwards;
 }

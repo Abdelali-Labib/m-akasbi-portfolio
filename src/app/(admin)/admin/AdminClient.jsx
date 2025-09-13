@@ -20,13 +20,11 @@ const AdminClient = ({ analyticsData }) => {
   const searchParams = useSearchParams();
   const [activeSection, setActiveSection] = useState('dashboard');
 
-  // Initialize section from URL params on mount
   useEffect(() => {
     const section = searchParams.get('section');
     if (section) {
       setActiveSection(section);
     } else {
-      // Redirect to dashboard if no section is specified
       router.push('/admin?section=dashboard');
     }
   }, [searchParams, router]);

@@ -8,13 +8,13 @@ import AnimatedItem from "@/components/ui/AnimatedItem";
 import { useRouter } from "next/navigation";
 
 /**
- * Home page client component - Renders the UI for the main landing page.
- * @param {object} props - The component props.
- * @param {object} props.homeContent - The content for the home page.
- * @param {Array<object>} props.statistics - The statistics data.
- * @param {object} props.socialMedia - The social media links data.
- * @param {object} props.profileInfo - The profile information including picture URL.
- * @param {object} props.pageContent - The page content including labels and text.
+ * Home page client component for main landing page UI.
+ * @param {object} props - Component props
+ * @param {object} props.homeContent - Home page content
+ * @param {Array<object>} props.statistics - Statistics data
+ * @param {object} props.socialMedia - Social media links
+ * @param {object} props.profileInfo - Profile info (picture URL)
+ * @param {object} props.pageContent - Page content (labels/text)
  */
 export default function HomeClient({
   homeContent = { subtitle: "", descriptions: [] },
@@ -26,15 +26,14 @@ export default function HomeClient({
   const router = useRouter();
 
   /**
-   * Handles the CV download button click.
-   * Opens the API route that serves the CV file, triggering a download.
+   * Handles CV download button click. Opens API route to trigger download.
    */
   const handleDownloadCv = () => {
-    // Simply open the CV download endpoint - tracking is handled server-side
+  // Open CV download endpoint (tracking is server-side)
     window.open('/api/cv', '_blank');
   };
 
-  // Default content fallbacks
+  // Default content values for home page
   const defaultContent = {
     badge: "Art & visuel • Créateur de contenu",
     greeting: "Bonjour, je suis",
@@ -44,7 +43,7 @@ export default function HomeClient({
     followMe: "Suivez-moi sur"
   };
 
-  // Merge fetched content with defaults
+  // Merge fetched content with default values
   const content = { ...defaultContent, ...pageContent };
 
   return (

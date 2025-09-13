@@ -17,7 +17,7 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
-        setAuthError(null); // Clear previous errors on new auth state
+  setAuthError(null); // Reset error state on new authentication
         try {
           const response = await fetch('/api/auth/check-admin', {
             method: 'POST',

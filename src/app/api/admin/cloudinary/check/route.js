@@ -27,7 +27,6 @@ export async function GET(request) {
       throw error;
     }
   } catch (error) {
-    console.error('Error checking Cloudinary resource:', error);
     return Response.json({ 
       error: 'Failed to check resource existence',
       exists: false 

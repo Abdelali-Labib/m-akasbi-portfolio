@@ -1,12 +1,12 @@
 /**
- * Utility functions for skills management and animations
+ * Utility functions for skill management and UI animation.
  */
 
 /**
- * Animate skill percentages with smooth transitions
- * @param {Array} targetPercentages - Array of target percentage values
- * @param {Function} setAnimatedPercentages - State setter for animated percentages
- * @param {number} stepTime - Time between animation steps in milliseconds
+ * Animates skill percentages for smooth UI transitions.
+ * @param {Array} targetPercentages - Target percentage values
+ * @param {Function} setAnimatedPercentages - State setter
+ * @param {number} stepTime - Animation step time (ms)
  */
 export const animateSkillPercentages = (targetPercentages, setAnimatedPercentages, stepTime = 30) => {
   targetPercentages.forEach((target, index) => {
@@ -28,7 +28,7 @@ export const animateSkillPercentages = (targetPercentages, setAnimatedPercentage
 };
 
 /**
- * Setup scroll listener for floating button visibility
+ * Sets up scroll listener for floating button visibility.
  * @param {string} targetElementId - ID of the element to track
  * @param {Function} setShowButton - State setter for button visibility
  */
@@ -37,7 +37,7 @@ export const setupScrollListener = (targetElementId, setShowButton) => {
     const targetElement = document.getElementById(targetElementId);
     if (targetElement) {
       const rect = targetElement.getBoundingClientRect();
-      // Show button when target element is out of view (above the viewport)
+      // Show button if target element is above the viewport
       setShowButton(rect.bottom < 0);
     }
   };

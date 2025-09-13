@@ -1,18 +1,17 @@
 "use client";
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useCallback } from 'react';
 import { usePathname } from 'next/navigation';
 
 export default function CustomAnalyticsTracker() {
   const pathname = usePathname();
   const visitorIdRef = useRef(null);
 
-  const trackPageview = async () => {
+  const trackPageview = useCallback(async () => {
     if (!visitorIdRef.current) return;
 
-    // Don't track admin pages
+  // ...existing code...
     if (pathname.startsWith('/admin')) {
-      console.log('Skipping analytics tracking for admin page:', pathname);
       return;
     }
 
@@ -31,17 +30,15 @@ export default function CustomAnalyticsTracker() {
       });
 
       const result = await response.json();
-      console.log('Pageview tracking response:', result);
 
-      // Mark this session as tracked
+  // ...existing code...
       sessionStorage.setItem('analytics_session_tracked', 'true');
     } catch (error) {
-      console.error('Analytics tracking failed:', error);
     }
-  };
+  }, [pathname]);
 
   useEffect(() => {
-    // Generate or retrieve visitor ID
+  // ...existing code...
     let visitorId = localStorage.getItem('analytics_visitor_id');
     if (!visitorId) {
       visitorId = 'visitor_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
@@ -49,21 +46,21 @@ export default function CustomAnalyticsTracker() {
     }
     visitorIdRef.current = visitorId;
 
-    // Track session start time for duration calculation
+  // ...existing code...
     const sessionStart = sessionStorage.getItem('analytics_session_start');
     if (!sessionStart) {
       sessionStorage.setItem('analytics_session_start', Date.now().toString());
     }
 
-    // Track pageview on every route change (not just once per session)
+  // ...existing code...
     trackPageview();
 
-    // Track session end on page unload
+  // ...existing code...
     const handleBeforeUnload = () => {
       const startTime = parseInt(sessionStorage.getItem('analytics_session_start') || '0');
-      const sessionDuration = Math.floor((Date.now() - startTime) / 1000); // in seconds
+  const sessionDuration = Math.floor((Date.now() - startTime) / 1000);
       
-      if (sessionDuration > 5) { // Only track sessions longer than 5 seconds
+  if (sessionDuration > 5) {
         navigator.sendBeacon('/api/track', JSON.stringify({
           type: 'session_end',
           visitorId: visitorIdRef.current,
@@ -77,14 +74,14 @@ export default function CustomAnalyticsTracker() {
     return () => {
       window.removeEventListener('beforeunload', handleBeforeUnload);
     };
-  }, []);
+  }, [trackPageview]);
 
-  // Expose tracking function globally for CV downloads and other events
+  // ...existing code...
   useEffect(() => {
     const trackEvent = async (eventName, eventData = {}) => {
       if (!visitorIdRef.current) return;
 
-      console.log('Tracking event:', eventName, 'with data:', eventData);
+      
 
       try {
         const response = await fetch('/api/track', {
@@ -103,16 +100,14 @@ export default function CustomAnalyticsTracker() {
         });
         
         const result = await response.json();
-        console.log('Event tracking response:', result);
       } catch (error) {
-        console.error('Event tracking failed:', error);
       }
     };
 
-    // Make tracking function available globally
+  // ...existing code...
     window.trackAnalyticsEvent = trackEvent;
 
-    // Cleanup
+  // ...existing code...
     return () => {
       if (window.trackAnalyticsEvent) {
         delete window.trackAnalyticsEvent;
@@ -120,6 +115,6 @@ export default function CustomAnalyticsTracker() {
     };
   }, []);
 
-  // This component doesn't render anything visible
+  // ...existing code...
   return null;
 }

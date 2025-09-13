@@ -3,8 +3,7 @@
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 
 /**
- * Theme provider wrapper for next-themes
- * Provides consistent theme switching across the application
+ * Theme provider for next-themes. Enables consistent theme switching.
  */
 export function ThemeProvider({ children, ...props }) {
   return (

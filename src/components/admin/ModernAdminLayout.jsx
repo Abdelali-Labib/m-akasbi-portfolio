@@ -24,7 +24,7 @@ import {
 import { useAuth } from '@/Providers/AuthContext';
 import { useTheme } from 'next-themes';
 import useUnreadMessages from '@/hooks/useUnreadMessages';
-import ThemeToggle from './ui/ThemeToggle';
+import ThemeToggle from '../ui/ThemeToggle';
 
 const ModernAdminLayout = ({ children, activeSection, onSectionChange }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -87,7 +87,7 @@ const ModernAdminLayout = ({ children, activeSection, onSectionChange }) => {
   );
 
   return (
-    <div className="min-h-screen bg-light dark:bg-primary">
+  <div className="min-h-screen">
       {/* Mobile sidebar overlay */}
       {sidebarOpen && (
         <div 

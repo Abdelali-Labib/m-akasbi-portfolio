@@ -317,16 +317,15 @@ const EnhancedAnalyticsDashboard = ({ analyticsData }) => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-light via-light/95 to-light/90 dark:from-primary dark:via-primary/95 dark:to-primary/90 p-4 sm:p-6 lg:p-8">
+    <div className="admin-container space-y-6 lg:space-y-8">
       {/* Header */}
-      <div className="max-w-7xl mx-auto space-y-6 lg:space-y-8">
         <div className="flex flex-col gap-6">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div className="space-y-2">
-              <h1 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold text-primary dark:text-light">
+              <h1 className="admin-title">
                 Tableau de Bord Analytique
               </h1>
-              <p className="text-sm sm:text-base lg:text-lg text-primary/70 dark:text-light/70">
+              <p className="admin-subtitle">
                 Aperçu complet des performances de votre portfolio
               </p>
             </div>
@@ -657,7 +656,6 @@ const EnhancedAnalyticsDashboard = ({ analyticsData }) => {
           </ChartCard>
         </div>
       </div>
-
       {/* Global Statistics Section */}
       <div className="bg-light/30 dark:bg-primary/30 backdrop-blur-sm rounded-3xl p-6 lg:p-8 border-2 border-purple-500/20 shadow-xl">
         <div className="flex flex-col sm:flex-row sm:items-center gap-3 mb-6">
@@ -690,8 +688,6 @@ const EnhancedAnalyticsDashboard = ({ analyticsData }) => {
             subtitle="Diversité géographique (global)"
           />
         </div>
-      </div>
-
       </div>
 
       {/* Source Modal */}

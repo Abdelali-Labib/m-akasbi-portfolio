@@ -129,10 +129,10 @@ const ManageSkills = () => {
 
   if (!loading && skills.length === 0) {
     return (
-      <div className="space-y-8">
+      <div className="admin-container space-y-8">
         <div className="mb-8">
-          <h1 className="text-2xl sm:text-3xl font-bold text-primary dark:text-light mb-2">Gestion des Compétences</h1>
-          <p className="text-primary/60 dark:text-light/60 text-base sm:text-lg mb-6">
+          <h1 className="admin-title">Gestion des Compétences</h1>
+          <p className="admin-subtitle">
             Gérez vos compétences techniques et professionnelles
           </p>
         </div>
@@ -253,13 +253,12 @@ const ManageSkills = () => {
   );
 
   return (
-  <div className="min-h-screen bg-gradient-to-br p-4 sm:p-6 lg:p-8">
-      <div className="max-w-7xl mx-auto space-y-6 lg:space-y-8">
+    <div className="admin-container space-y-8">
         <div className="mb-8">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
-              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-primary dark:text-light mb-2">Gestion des Compétences</h1>
-              <p className="text-primary/60 dark:text-light/60 text-sm sm:text-base lg:text-lg">
+              <h1 className="admin-title">Gestion des Compétences</h1>
+              <p className="admin-subtitle">
                 Gérez vos compétences techniques et professionnelles
               </p>
             </div>
@@ -334,7 +333,6 @@ const ManageSkills = () => {
         type="delete"
         loading={deleteModal.loading}
       />
-      </div>
     </div>
   );
 };

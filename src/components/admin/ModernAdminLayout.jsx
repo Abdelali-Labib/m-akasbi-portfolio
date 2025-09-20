@@ -197,7 +197,7 @@ const ModernAdminLayout = ({ children, activeSection, onSectionChange }) => {
 
         {/* Page Content */}
         <main className="p-6">
-          <div className="max-w-7xl mx-auto">
+          <div className="admin-container">
             {children}
           </div>
         </main>

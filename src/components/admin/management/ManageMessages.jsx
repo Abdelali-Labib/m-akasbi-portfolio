@@ -250,11 +250,11 @@ const ManageMessages = () => {
   const readRate = messages.length > 0 ? Math.round(((messages.length - unreadCount) / messages.length) * 100) : 0;
 
   return (
-    <div className="space-y-8">
+    <div className="admin-container space-y-8">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-primary dark:text-light mb-2">Gestion des Messages</h1>
-        <p className="text-primary/70 dark:text-light/70 text-lg mb-6">
+        <h1 className="admin-title">Gestion des Messages</h1>
+        <p className="admin-subtitle">
           Gérez et répondez aux messages reçus via votre formulaire de contact
         </p>
         <button

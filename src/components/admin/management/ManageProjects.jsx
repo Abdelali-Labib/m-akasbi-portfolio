@@ -313,10 +313,10 @@ const ManageProjects = () => {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="admin-container space-y-8">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">Gestion des Projets</h1>
-        <p className="text-gray-600 dark:text-gray-400 text-lg mb-6">
+        <h1 className="admin-title">Gestion des Projets</h1>
+        <p className="admin-subtitle">
           Gérez vos projets et réalisations
         </p>
         {!isFormVisible && (

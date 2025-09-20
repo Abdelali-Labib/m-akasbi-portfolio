@@ -471,17 +471,11 @@ class FirestoreService {
           device = 'desktop'; // Default fallback
         }
       }
-
-      // Normalize device types (e.g., 'wearable' could be grouped or handled)
-      if (!['mobile', 'tablet', 'desktop'].includes(device)) {
-        device = 'desktop'; // Or handle other types like 'smarttv', 'console' if needed
-      }
-
+      // Server-side (admin SDK) aggregation when available
       if (typeof window === 'undefined') {
         try {
           const { dbAdmin } = await import('./firebase-admin');
           if (dbAdmin) {
-            // ...existing code...
             const docRef = dbAdmin.collection('analytics').doc('daily_stats');
             const snap = await docRef.get();
             const current = snap.exists ? snap.data() : {};
@@ -493,29 +487,26 @@ class FirestoreService {
             next.visitor_devices = { ...(current.visitor_devices || {}) };
             next.visitor_referrers = { ...(current.visitor_referrers || {}) };
 
-            const dayVisitors = Array.isArray(next.daily_visitors[date]) ? next.daily_visitors[date] : [];
-            const isNewVisitor = !dayVisitors.includes(visitorId);
-            
-            if (isNewVisitor) {
-              dayVisitors.push(visitorId);
-              next.daily_visitors[date] = dayVisitors;
-              
-              // Only count unique visitors for countries, devices, and referrers
-              next.visitor_countries[country || 'Unknown'] = (next.visitor_countries[country || 'Unknown'] || 0) + 1;
-              next.visitor_devices[device] = (next.visitor_devices[device] || 0) + 1;
-              next.visitor_referrers[referrer || 'Direct'] = (next.visitor_referrers[referrer || 'Direct'] || 0) + 1;
-            }
+            // Increment counters only (do not store visitor IDs)
+            const currentCountAdmin = typeof next.daily_visitors[date] === 'number'
+              ? next.daily_visitors[date]
+              : (Array.isArray(next.daily_visitors[date]) ? next.daily_visitors[date].length : 0);
+            next.daily_visitors[date] = currentCountAdmin + 1;
+
+            next.visitor_countries[country || 'Unknown'] = (next.visitor_countries[country || 'Unknown'] || 0) + 1;
+            next.visitor_devices[device] = (next.visitor_devices[device] || 0) + 1;
+            next.visitor_referrers[referrer || 'Direct'] = (next.visitor_referrers[referrer || 'Direct'] || 0) + 1;
 
             await docRef.set(next, { merge: true });
             return;
           }
         } catch (_) {
-          // ...existing code...
+          // fallback to client SDK below
         }
       }
 
+      // Client-side fallback using web SDK
       {
-  // ...existing code...
         const aggRef = doc(db, 'analytics', 'daily_stats');
         const aggSnap = await getDoc(aggRef);
         const current = aggSnap.exists() ? aggSnap.data() : {};
@@ -526,27 +517,22 @@ class FirestoreService {
         next.visitor_devices = { ...(current.visitor_devices || {}) };
         next.visitor_referrers = { ...(current.visitor_referrers || {}) };
 
-        const dayVisitors = Array.isArray(next.daily_visitors[date]) ? next.daily_visitors[date] : [];
-        const isNewVisitor = !dayVisitors.includes(visitorId);
-        
-        if (isNewVisitor) {
-          dayVisitors.push(visitorId);
-          next.daily_visitors[date] = dayVisitors;
-          
-          // ...existing code...
-          next.visitor_countries[country || 'Unknown'] = (next.visitor_countries[country || 'Unknown'] || 0) + 1;
-          next.visitor_devices[device] = (next.visitor_devices[device] || 0) + 1;
-          next.visitor_referrers[referrer || 'Direct'] = (next.visitor_referrers[referrer || 'Direct'] || 0) + 1;
-        }
+        const currentCount = typeof next.daily_visitors[date] === 'number'
+          ? next.daily_visitors[date]
+          : (Array.isArray(next.daily_visitors[date]) ? next.daily_visitors[date].length : 0);
+        next.daily_visitors[date] = currentCount + 1;
+
+        next.visitor_countries[country || 'Unknown'] = (next.visitor_countries[country || 'Unknown'] || 0) + 1;
+        next.visitor_devices[device] = (next.visitor_devices[device] || 0) + 1;
+        next.visitor_referrers[referrer || 'Direct'] = (next.visitor_referrers[referrer || 'Direct'] || 0) + 1;
 
         await setDoc(aggRef, next, { merge: true });
       }
 
     } catch (error) {
-  // ...existing code...
+      // ...existing code...
     }
   }
-
   /**
    * Track CV download with date-based analytics
    * @param {Object} downloadData - Download tracking data
@@ -620,13 +606,15 @@ class FirestoreService {
       
       // Calculate total visitors and visitors by day from the daily_visitors map
       const dailyVisitorsMap = data.daily_visitors || {};
-      const totalVisitors = Object.values(dailyVisitorsMap).reduce((sum, visitorsArray) => {
-        return sum + (Array.isArray(visitorsArray) ? visitorsArray.length : 0);
+      const totalVisitors = Object.values(dailyVisitorsMap).reduce((sum, value) => {
+        if (Array.isArray(value)) return sum + value.length; // backward compatibility
+        const n = Number(value || 0);
+        return sum + (isNaN(n) ? 0 : n);
       }, 0);
 
-      const visitorsByDay = Object.entries(dailyVisitorsMap).map(([date, visitorsArray]) => ({
+      const visitorsByDay = Object.entries(dailyVisitorsMap).map(([date, value]) => ({
         date,
-        visitors: Array.isArray(visitorsArray) ? visitorsArray.length : 0,
+        visitors: Array.isArray(value) ? value.length : (Number(value || 0) || 0),
       }));
 
       // Calculate CV downloads total from cv_downloads_by_date

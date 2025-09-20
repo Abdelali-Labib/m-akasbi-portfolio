@@ -16,7 +16,7 @@ export default function Error({ error, reset }) {
   };
 
   const handleContact = () => {
-    window.location.href = '/contact';
+    window.location.href = 'mailto:is.abdelalilabib@gmail.com';
   };
 
   return (
@@ -92,7 +92,7 @@ export default function Error({ error, reset }) {
         {/* Additional Help */}
         <div className="mt-8 pt-6 border-t border-primary/10 dark:border-light/10">
           <p className="text-sm text-primary/60 dark:text-light/60">
-            Si le problème persiste, n'hésitez pas à me contacter via le formulaire de contact.
+            Si le problème persiste, n'hésitez pas à me contacter.
           </p>
         </div>
       </div>

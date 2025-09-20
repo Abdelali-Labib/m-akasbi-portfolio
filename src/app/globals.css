@@ -374,6 +374,18 @@ body.modal-open {
   @apply focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-primary;
 }
 
+.admin-container {
+  @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+}
+
+.admin-title {
+  @apply text-2xl sm:text-3xl font-bold text-primary dark:text-light mb-2;
+}
+
+.admin-subtitle {
+  @apply text-primary/70 dark:text-light/70 text-base sm:text-lg mb-6;
+}
+
 .loading-shimmer {
   @apply bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 dark:from-gray-800 dark:via-gray-700 dark:to-gray-800;
   background-size: 200% 100%;

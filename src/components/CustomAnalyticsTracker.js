@@ -6,9 +6,21 @@ import { usePathname } from 'next/navigation';
 export default function CustomAnalyticsTracker() {
   const pathname = usePathname();
   const visitorIdRef = useRef(null);
+  const hasTrackedRef = useRef(false);
 
   const trackPageview = useCallback(async () => {
     if (!visitorIdRef.current) return;
+    // Prevent back-to-back duplicate sends in same render cycle
+    if (hasTrackedRef.current) return;
+
+    // Only count first visit per calendar day
+    const today = new Date().toISOString().split('T')[0];
+    try {
+      if (typeof window !== 'undefined') {
+        const lastTrackedDate = localStorage.getItem('analytics_tracked_date');
+        if (lastTrackedDate === today) return;
+      }
+    } catch (_) {}
 
   // ...existing code...
     if (pathname.startsWith('/admin')) {
@@ -24,6 +36,7 @@ export default function CustomAnalyticsTracker() {
         body: JSON.stringify({
           type: 'pageview',
           visitorId: visitorIdRef.current,
+          pathname,
           referrer: document.referrer || 'Direct',
           userAgent: navigator.userAgent,
         }),
@@ -31,14 +44,18 @@ export default function CustomAnalyticsTracker() {
 
       const result = await response.json();
 
-  // ...existing code...
+      // Mark as tracked for today
+      hasTrackedRef.current = true;
+      try {
+        localStorage.setItem('analytics_tracked_date', today);
+      } catch (_) {}
+      // Optional: session marker
       sessionStorage.setItem('analytics_session_tracked', 'true');
     } catch (error) {
     }
   }, [pathname]);
 
   useEffect(() => {
-  // ...existing code...
     let visitorId = localStorage.getItem('analytics_visitor_id');
     if (!visitorId) {
       visitorId = 'visitor_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
@@ -46,21 +63,18 @@ export default function CustomAnalyticsTracker() {
     }
     visitorIdRef.current = visitorId;
 
-  // ...existing code...
     const sessionStart = sessionStorage.getItem('analytics_session_start');
     if (!sessionStart) {
       sessionStorage.setItem('analytics_session_start', Date.now().toString());
     }
 
-  // ...existing code...
+    // Attempt to track; function will ensure only once per day
     trackPageview();
 
-  // ...existing code...
     const handleBeforeUnload = () => {
       const startTime = parseInt(sessionStorage.getItem('analytics_session_start') || '0');
-  const sessionDuration = Math.floor((Date.now() - startTime) / 1000);
-      
-  if (sessionDuration > 5) {
+      const sessionDuration = Math.floor((Date.now() - startTime) / 1000);
+      if (sessionDuration > 5) {
         navigator.sendBeacon('/api/track', JSON.stringify({
           type: 'session_end',
           visitorId: visitorIdRef.current,

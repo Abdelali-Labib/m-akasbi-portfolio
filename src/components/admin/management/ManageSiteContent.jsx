@@ -206,11 +206,10 @@ const ManageSiteContent = () => {
   );
 
   return (
-  <div className="min-h-screen bg-gradient-to-br p-4 sm:p-6 lg:p-8">
-      <div className="max-w-7xl mx-auto space-y-6 lg:space-y-8">
+    <div className="admin-container space-y-8">
       <div className="mb-8">
-        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-primary dark:text-light mb-2">Gestion du Contenu du Site</h1>
-        <p className="text-primary/60 dark:text-light/60 text-sm sm:text-base lg:text-lg mb-6">
+        <h1 className="admin-title">Gestion du Contenu du Site</h1>
+        <p className="admin-subtitle">
           Gérez les contenus statiques de votre portfolio
         </p>
       </div>
@@ -247,7 +246,6 @@ const ManageSiteContent = () => {
         type="delete"
         loading={deleteModal.loading}
       />
-      </div>
     </div>
   );
 };

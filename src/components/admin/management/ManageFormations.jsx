@@ -150,10 +150,10 @@ const ManageFormations = () => {
   );
 
   return (
-    <div className="space-y-8">
+    <div className="admin-container space-y-8">
       <div className="mb-8">
-        <h1 className="text-2xl sm:text-3xl font-bold text-primary dark:text-light mb-2">Gestion des Formations</h1>
-        <p className="text-primary/60 dark:text-light/60 text-base sm:text-lg mb-6">
+        <h1 className="admin-title">Gestion des Formations</h1>
+        <p className="admin-subtitle">
           Gérez vos formations académiques et certifications
         </p>
         {!isFormVisible && (

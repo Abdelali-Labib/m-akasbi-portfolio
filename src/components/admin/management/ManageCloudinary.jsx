@@ -201,7 +201,7 @@ const ManageCloudinary = () => {
     if (!renameModal.file || !renameModal.newName.trim()) return;
     
     setRenameModal(prev => ({ ...prev, loading: true, error: '' }));
-    setMessage(''); // Clear any previous messages
+    setMessage(''); 
     
     try {
       // Check if name already exists
@@ -290,11 +290,11 @@ const ManageCloudinary = () => {
   }, [message]);
 
   return (
-    <div className="space-y-6">
+    <div className="admin-container space-y-6">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-primary dark:text-light mb-2">Gestionnaire de Fichiers</h1>
-        <p className="text-primary/70 dark:text-light/70 text-lg mb-6">
+        <h1 className="admin-title">Gestionnaire de Fichiers</h1>
+        <p className="admin-subtitle">
           Gérez vos fichiers Cloudinary - images, vidéos, documents
         </p>
         <div className="flex flex-wrap gap-4">

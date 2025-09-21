@@ -135,6 +135,15 @@ const ManageSkills = () => {
           <p className="admin-subtitle">
             Gérez vos compétences techniques et professionnelles
           </p>
+          {!isFormVisible && (
+            <button
+              onClick={handleAddNew}
+              className="admin-add-button"
+            >
+              <FaPlus className="w-4 h-4" />
+              Ajouter une Compétence
+            </button>
+          )}
         </div>
         
         {isFormVisible && (
@@ -265,7 +274,7 @@ const ManageSkills = () => {
             {!isFormVisible && (
               <button
                 onClick={handleAddNew}
-                className="flex items-center gap-2 px-6 py-3 bg-accent text-white rounded-lg hover:bg-accent/90 transition-colors shadow-lg hover:shadow-xl transform hover:scale-105 duration-200"
+                className="admin-add-button"
               >
                 <FaPlus className="w-4 h-4" />
                 Ajouter une Compétence
@@ -304,7 +313,7 @@ const ManageSkills = () => {
               </div>
               <button
                 onClick={handleAddNew}
-                className="inline-flex items-center gap-2 px-6 py-3 bg-accent text-white rounded-lg hover:bg-accent/90 transition-colors shadow-lg hover:shadow-xl transform hover:scale-105 duration-200"
+                className="admin-add-button"
               >
                 <FaPlus className="w-4 h-4" />
                 Ajouter ma première compétence

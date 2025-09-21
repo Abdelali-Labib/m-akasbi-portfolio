@@ -53,7 +53,7 @@ const FormationForm = ({ initialData, onSubmit, onCancel }) => {
         
         <div className="sm:col-span-2">
           <label htmlFor="type" className="block text-xs sm:text-sm font-medium mb-2 text-primary dark:text-light">Type</label>
-          <select id="type" name="type" value={formData.type} onChange={handleInputChange} className="w-full px-3 py-2 rounded-lg border border-primary/20 dark:border-light/20 text-primary dark:text-light text-sm sm:text-base" required>
+          <select name="type" value={formData.type} onChange={handleInputChange} className="admin-input" required>
             <option value="academic">Académique</option>
             <option value="certificate">Certification</option>
           </select>
@@ -61,22 +61,22 @@ const FormationForm = ({ initialData, onSubmit, onCancel }) => {
 
         <div>
           <label htmlFor="name" className="block text-xs sm:text-sm font-medium mb-2 text-primary dark:text-light">Nom de la Formation</label>
-          <input id="name" name="name" value={formData.name} onChange={handleInputChange} className="w-full px-3 py-2 rounded-lg border border-primary/20 dark:border-light/20 text-primary dark:text-light text-sm sm:text-base" required />
+          <input name="name" value={formData.name} onChange={handleInputChange} className="admin-input" required />
         </div>
 
         <div>
           <label htmlFor="institution" className="block text-xs sm:text-sm font-medium mb-2 text-primary dark:text-light">Institution</label>
-          <input id="institution" name="institution" value={formData.institution} onChange={handleInputChange} className="w-full px-3 py-2 rounded-lg border border-primary/20 dark:border-light/20 text-primary dark:text-light text-sm sm:text-base" required />
+          <input name="institution" value={formData.institution} onChange={handleInputChange} className="admin-input" required />
         </div>
 
         <div>
           <label htmlFor="speciality" className="block text-xs sm:text-sm font-medium mb-2 text-primary dark:text-light">Spécialité</label>
-          <input id="speciality" name="speciality" value={formData.speciality} onChange={handleInputChange} className="w-full px-3 py-2 rounded-lg border border-primary/20 dark:border-light/20 text-primary dark:text-light text-sm sm:text-base" required />
+          <input name="speciality" value={formData.speciality} onChange={handleInputChange} className="admin-input" required />
         </div>
 
         <div>
           <label htmlFor="year" className="block text-xs sm:text-sm font-medium mb-2 text-primary dark:text-light">Année</label>
-          <input id="year" name="year" type="number" value={formData.year} onChange={handleInputChange} className="w-full px-3 py-2 rounded-lg border border-primary/20 dark:border-light/20 text-primary dark:text-light text-sm sm:text-base" required />
+          <input id="year" name="year" type="number" value={formData.year} onChange={handleInputChange} className="admin-input" required />
         </div>
 
         <div className="sm:col-span-2 flex flex-col sm:flex-row items-center gap-3 pt-4">
@@ -88,7 +88,7 @@ const FormationForm = ({ initialData, onSubmit, onCancel }) => {
             <FiSave className="w-4 h-4" />
             {saving ? 'Sauvegarde...' : (initialData ? 'Mettre à Jour' : 'Sauvegarder')}
           </button>
-          <button type="button" onClick={onCancel} className="w-full sm:w-auto px-6 py-3 bg-primary/70 dark:bg-light/70 text-light dark:text-primary rounded-lg hover:bg-primary/80 dark:hover:bg-light/80 transition-colors flex items-center gap-2">
+          <button type="button" onClick={onCancel} className="admin-cancel-button">
             <FiX className="w-4 h-4" />
             Annuler
           </button>

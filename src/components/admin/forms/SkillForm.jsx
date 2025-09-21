@@ -117,7 +117,7 @@ const SkillForm = ({ initialData, onSubmit, onCancel }) => {
       <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label className="block text-xs sm:text-sm font-medium mb-2 text-primary dark:text-light">Nom de la Compétence</label>
-            <input name="name" value={formData.name} onChange={handleInputChange} className="w-full px-3 py-2 rounded-lg border border-primary/30 dark:border-light/30 text-primary dark:text-light focus:border-accent focus:ring-2 focus:ring-accent/20" required />
+            <input name="name" value={formData.name} onChange={handleInputChange} className="admin-input" required />
           </div>
           <div className="space-y-4">
             {formData.icon && (
@@ -171,7 +171,7 @@ const SkillForm = ({ initialData, onSubmit, onCancel }) => {
                     type="text"
                     value={formData.icon || ''}
                     onChange={(e) => setFormData({...formData, icon: e.target.value})}
-                    className="flex-1 px-3 py-2 border border-primary/30 dark:border-light/30 rounded-lg text-primary dark:text-light focus:border-accent focus:ring-2 focus:ring-accent/20"
+                    className="flex-1 admin-input"
                   />
                   <button
                     type="button"
@@ -223,7 +223,7 @@ const SkillForm = ({ initialData, onSubmit, onCancel }) => {
           </div>
           <div>
             <label className="block text-xs sm:text-sm font-medium mb-2 text-primary dark:text-light">Catégorie</label>
-            <select name="category" value={formData.category} onChange={handleInputChange} className="w-full px-3 py-2 rounded-lg border border-primary/30 dark:border-light/30 text-primary dark:text-light focus:border-accent focus:ring-2 focus:ring-accent/20" required>
+            <select name="category" value={formData.category} onChange={handleInputChange} className="admin-input" required>
               <option value="technical">Outils Techniques</option>
               <option value="comprehensive">Compétences Générales</option>
               <option value="language">Langues</option>
@@ -244,7 +244,7 @@ const SkillForm = ({ initialData, onSubmit, onCancel }) => {
               <FiSave className="w-4 h-4" />
               {saving ? 'Sauvegarde...' : (initialData ? 'Mettre à Jour' : 'Sauvegarder')}
             </button>
-            <button type="button" onClick={onCancel} className="w-full sm:w-auto px-6 py-3 text-light dark:text-primary rounded-lg transition-colors flex items-center gap-2">
+            <button type="button" onClick={onCancel} className="admin-cancel-button">
               <FiX className="w-4 h-4" />
               Annuler
             </button>

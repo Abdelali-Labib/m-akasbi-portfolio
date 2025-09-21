@@ -10,12 +10,12 @@ import ConfirmationModal from '../ui/ConfirmationModal';
  * @param {{ title: string, value: string | number, icon: React.ElementType, rate?: boolean }} props
  */
 const StatCard = ({ title, value, icon: Icon, rate = false }) => (
-  <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-6">
+  <div className="border border-primary/20 dark:border-light/20 rounded-lg p-6">
     <div className="flex items-center justify-between">
       <div>
-        <p className="text-sm font-medium text-gray-600 dark:text-gray-400">{title}</p>
+        <p className="text-sm font-medium text-primary/70 dark:text-light/70">{title}</p>
         <p className={`text-3xl font-bold mt-1 ${
-          rate ? (value > 75 ? 'text-green-600' : value > 25 ? 'text-yellow-600' : 'text-red-600') : 'text-gray-900 dark:text-gray-100'
+          rate ? (value > 75 ? 'text-green-600' : value > 25 ? 'text-yellow-600' : 'text-red-600') : 'text-primary dark:text-light'
         }`}>
           {value}{rate && '%'}
         </p>

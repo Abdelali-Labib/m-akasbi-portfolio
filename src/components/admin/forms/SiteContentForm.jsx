@@ -117,7 +117,7 @@ const SiteContentForm = ({ initialData, onSubmit, onCancel }) => {
                 type="text"
                 value={formData.subtitle || ''}
                 onChange={(e) => setFormData({...formData, subtitle: e.target.value})}
-                className="w-full px-3 py-2 border border-primary/30 dark:border-light/30 rounded-lg text-primary dark:text-light focus:border-accent focus:ring-2 focus:ring-accent/20"
+                className="admin-input"
               />
             </div>
             <div>
@@ -128,7 +128,7 @@ const SiteContentForm = ({ initialData, onSubmit, onCancel }) => {
                 value={formData.description || ''}
                 onChange={(e) => setFormData({...formData, description: e.target.value})}
                 rows={4}
-                className="w-full px-3 py-2 border border-primary/30 dark:border-light/30 rounded-lg text-primary dark:text-light focus:border-accent focus:ring-2 focus:ring-accent/20"
+                className="admin-input"
               />
             </div>
           </>
@@ -152,7 +152,7 @@ const SiteContentForm = ({ initialData, onSubmit, onCancel }) => {
                         newItems[index] = {...item, number: parseInt(e.target.value) || 0};
                         setFormData({...formData, items: newItems});
                       }}
-                          className="px-2 py-1 border border-primary/30 dark:border-light/30 rounded text-primary dark:text-light focus:border-accent focus:ring-1 focus:ring-accent/20"
+                          className="px-2 py-1 admin-input"
                     />
                     <input
                       type="text"
@@ -162,7 +162,7 @@ const SiteContentForm = ({ initialData, onSubmit, onCancel }) => {
                         newItems[index] = {...item, text: e.target.value};
                         setFormData({...formData, items: newItems});
                       }}
-                          className="px-2 py-1 border border-primary/30 dark:border-light/30 rounded text-primary dark:text-light focus:border-accent focus:ring-1 focus:ring-accent/20"
+                          className="px-2 py-1 admin-input"
                     />
                     <button
                       type="button"
@@ -224,7 +224,7 @@ const SiteContentForm = ({ initialData, onSubmit, onCancel }) => {
                         [platform]: e.target.value
                       }
                     })}
-                    className="w-full px-3 py-2 border border-primary/30 dark:border-light/30 rounded-lg bg-light/50 dark:bg-primary/50 text-primary dark:text-light focus:border-accent focus:ring-2 focus:ring-accent/20"
+                    className="admin-input"
                   />
                 </div>
               ))}
@@ -269,7 +269,7 @@ const SiteContentForm = ({ initialData, onSubmit, onCancel }) => {
                     type="text"
                     value={formData.picture_name || ''}
                     onChange={(e) => setFormData({...formData, picture_name: e.target.value})}
-                          className="flex-1 px-3 py-2 border border-primary/30 dark:border-light/30 rounded-lg text-primary dark:text-light focus:border-accent focus:ring-2 focus:ring-accent/20"
+                          className="flex-1 admin-input"
                   />
                   <button
                     type="button"
@@ -359,7 +359,7 @@ const SiteContentForm = ({ initialData, onSubmit, onCancel }) => {
                     type="text"
                     value={formData.cv_path || ''}
                     onChange={(e) => setFormData({...formData, cv_path: e.target.value})}
-                            className="flex-1 px-3 py-2 border border-primary/30 dark:border-light/30 rounded-lg text-primary dark:text-light focus:border-accent focus:ring-2 focus:ring-accent/20"
+                            className="flex-1 admin-input"
                   />
                   <button
                     type="button"
@@ -438,7 +438,7 @@ const SiteContentForm = ({ initialData, onSubmit, onCancel }) => {
             <select
               value={formData.type}
               onChange={(e) => setFormData({...formData, type: e.target.value})}
-              className="w-full px-3 py-2 border border-primary/30 dark:border-light/30 rounded-lg text-primary dark:text-light focus:border-accent focus:ring-2 focus:ring-accent/20"
+              className="admin-input"
             >
               <option value="home">Contenu Accueil</option>
               <option value="statistics">Statistiques</option>
@@ -463,7 +463,7 @@ const SiteContentForm = ({ initialData, onSubmit, onCancel }) => {
           <button
             type="button"
             onClick={onCancel}
-            className="px-6 py-3 text-light dark:text-primary rounded-lg transition-colors flex items-center gap-2"
+            className="admin-cancel-button"
           >
             <FiX className="w-4 h-4" />
             Annuler

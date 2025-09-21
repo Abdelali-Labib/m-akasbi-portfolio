@@ -143,15 +143,17 @@ const ManageProjects = () => {
   // Show message if no data exists
   if (!loading && projects.length === 0) {
     return (
-      <div className="space-y-8">
+      <div className="admin-container space-y-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">Gestion des Projets</h1>
-          <p className="text-gray-600 dark:text-gray-400 text-lg mb-6">
+          <h1 className="admin-title">Gestion des Projets</h1>
+          <p className="admin-subtitle">
             Gérez vos projets et réalisations
           </p>
-          <button onClick={handleAddNew} className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-            <FaPlus className="mr-2 inline" /> Ajouter un Projet
-          </button>
+          {!isFormVisible && (
+            <button onClick={handleAddNew} className="admin-add-button">
+              <FaPlus className="w-4 h-4" /> Ajouter un Projet
+            </button>
+          )}
         </div>
         
         {isFormVisible && (
@@ -163,7 +165,7 @@ const ManageProjects = () => {
         )}
         
         <div className="text-center py-16">
-          <p className="text-gray-500 mb-4">Aucun projet trouvé. Commencez par ajouter votre premier projet.</p>
+          <p className="text-primary/60 dark:text-light/60 mb-4">Aucun projet trouvé. Commencez par ajouter votre premier projet.</p>
         </div>
       </div>
     );
@@ -199,7 +201,7 @@ const ManageProjects = () => {
             
             return (
               <div key={proj.id} className="group border border-primary/20 dark:border-light/20 rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 hover:border-accent/50">
-                <div className="relative h-48 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-900">
+                <div className="relative h-48 bg-gradient-to-br from-light/50 to-light/70 dark:from-primary/50 dark:to-primary/70">
                   {imageUrl ? (
                     <img 
                       src={imageUrl} 
@@ -214,7 +216,7 @@ const ManageProjects = () => {
                   <div className={`${imageUrl ? 'hidden' : 'flex'} w-full h-full items-center justify-center`}>
                     <div className="text-center">
                       <TypeIcon className={`mx-auto h-12 w-12 mb-2 ${typeInfo.color}`} />
-                      <span className="text-gray-500 dark:text-gray-400 text-sm">Pas d'image</span>
+                      <span className="text-primary/60 dark:text-light/60 text-sm">Pas d'image</span>
                     </div>
                   </div>
                   
@@ -320,8 +322,8 @@ const ManageProjects = () => {
           Gérez vos projets et réalisations
         </p>
         {!isFormVisible && (
-          <button onClick={handleAddNew} className="px-6 py-3 bg-accent text-white rounded-lg hover:bg-accent/90 transition-colors">
-            <FaPlus className="mr-2 inline" /> Ajouter un Projet
+          <button onClick={handleAddNew} className="admin-add-button">
+            <FaPlus className="w-4 h-4" /> Ajouter un Projet
           </button>
         )}
       </div>
@@ -355,11 +357,11 @@ const ManageProjects = () => {
           
           {!loading && !error && projects.length === 0 && (
             <div className="text-center py-12 rounded-lg border border-primary/20 dark:border-light/20">
-              <div className="text-gray-400 dark:text-gray-500 mb-4">
+              <div className="text-primary/40 dark:text-light/40 mb-4">
                 <FaProjectDiagram className="mx-auto h-12 w-12 mb-4" />
               </div>
-              <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">Aucun projet trouvé</h3>
-              <p className="text-gray-500 dark:text-gray-400">Commencez par ajouter votre premier projet.</p>
+              <h3 className="text-lg font-medium text-primary dark:text-light mb-2">Aucun projet trouvé</h3>
+              <p className="text-primary/60 dark:text-light/60">Commencez par ajouter votre premier projet.</p>
             </div>
           )}
           

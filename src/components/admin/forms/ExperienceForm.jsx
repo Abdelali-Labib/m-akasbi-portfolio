@@ -129,7 +129,7 @@ const ExperienceForm = ({ initialData, onSubmit, onCancel }) => {
         
         <div className="sm:col-span-2">
           <label htmlFor="type" className="block text-xs sm:text-sm font-medium mb-2 text-primary dark:text-light">Type</label>
-          <select id="type" name="type" value={formData.type} onChange={handleInputChange} className="w-full px-3 py-2 rounded-lg border border-primary/20 dark:border-light/20 text-primary dark:text-light text-sm sm:text-base" required>
+          <select name="type" value={formData.type} onChange={handleInputChange} className="admin-input" required>
             <option value="work">Professionnel</option>
             <option value="film">Filmographie</option>
           </select>
@@ -137,27 +137,27 @@ const ExperienceForm = ({ initialData, onSubmit, onCancel }) => {
 
         <div>
           <label htmlFor="position" className="block text-xs sm:text-sm font-medium mb-2 text-primary dark:text-light">Poste</label>
-          <input id="position" name="position" value={formData.position} onChange={handleInputChange} className="w-full px-3 py-2 rounded-lg border border-primary/20 dark:border-light/20 text-primary dark:text-light text-sm sm:text-base" required />
+          <input name="position" value={formData.position} onChange={handleInputChange} className="admin-input" required />
         </div>
 
         <div>
           <label htmlFor="place" className="block text-xs sm:text-sm font-medium mb-2 text-primary dark:text-light">{formData.type === 'film' ? 'Production' : 'Entreprise/Institution'}</label>
-          <input id="place" name="place" value={formData.place} onChange={handleInputChange} className="w-full px-3 py-2 rounded-lg border border-primary/20 dark:border-light/20 text-primary dark:text-light text-sm sm:text-base" required />
+          <input name="place" value={formData.place} onChange={handleInputChange} className="admin-input" required />
         </div>
 
         <div>
           <label htmlFor="location" className="block text-xs sm:text-sm font-medium mb-2 text-primary dark:text-light">Lieu</label>
-          <input id="location" name="location" value={formData.location} onChange={handleInputChange} className="w-full px-3 py-2 rounded-lg border border-primary/20 dark:border-light/20 text-primary dark:text-light text-sm sm:text-base" required />
+          <input id="location" name="location" value={formData.location} onChange={handleInputChange} className="admin-input" required />
         </div>
 
         <div>
           <label htmlFor="startYear" className="block text-xs sm:text-sm font-medium mb-2 text-primary dark:text-light">Année de Début</label>
-          <input id="startYear" name="startYear" type="number" value={formData.startYear} onChange={handleInputChange} className="w-full px-3 py-2 rounded-lg border border-primary/20 dark:border-light/20 text-primary dark:text-light text-sm sm:text-base" required />
+          <input id="startYear" name="startYear" type="number" value={formData.startYear} onChange={handleInputChange} className="admin-input" required />
         </div>
 
         <div>
           <label htmlFor="endYear" className="block text-xs sm:text-sm font-medium mb-2 text-primary dark:text-light">Année de Fin (optionnel)</label>
-          <input id="endYear" name="endYear" type="number" value={formData.endYear} onChange={handleInputChange} className={`w-full px-3 py-2 rounded-lg border ${errors.endYear ? 'border-red-500' : 'border-primary/20 dark:border-light/20'} text-primary dark:text-light text-sm sm:text-base`} />
+          <input id="endYear" name="endYear" type="number" value={formData.endYear} onChange={handleInputChange} className={`admin-input ${errors.endYear ? 'border-red-500' : ''}`} />
           {errors.endYear && (
             <p className="text-red-500 text-xs mt-1">{errors.endYear}</p>
           )}
@@ -165,7 +165,7 @@ const ExperienceForm = ({ initialData, onSubmit, onCancel }) => {
 
         <div>
           <label htmlFor="duration" className="block text-xs sm:text-sm font-medium mb-2 text-primary dark:text-light">Durée</label>
-          <input id="duration" name="duration" value={formData.duration} onChange={handleInputChange} className="w-full px-3 py-2 rounded-lg border border-primary/20 dark:border-light/20 text-primary dark:text-light text-sm sm:text-base" required />
+          <input id="duration" name="duration" value={formData.duration} onChange={handleInputChange} className="admin-input" required />
         </div>
 
         <div className="flex items-center gap-3">
@@ -185,7 +185,7 @@ const ExperienceForm = ({ initialData, onSubmit, onCancel }) => {
         {formData.type === 'film' && (
           <div>
             <label htmlFor="filmName" className="block text-xs sm:text-sm font-medium mb-2 text-primary dark:text-light">Nom du Film</label>
-            <input id="filmName" name="filmName" value={formData.filmName} onChange={handleInputChange} className="w-full px-3 py-2 rounded-lg border border-primary/20 dark:border-light/20 text-primary dark:text-light text-sm sm:text-base" required />
+            <input id="filmName" name="filmName" type="text" value={formData.filmName || ''} onChange={handleInputChange} className="admin-input" />
           </div>
         )}
 
@@ -199,7 +199,7 @@ const ExperienceForm = ({ initialData, onSubmit, onCancel }) => {
                   type="text"
                   value={achievement}
                   onChange={(e) => handleAchievementChange(index, e.target.value)}
-                  className="flex-1 px-3 py-2 rounded-lg border border-primary/20 dark:border-light/20 bg-white dark:bg-primary text-primary dark:text-light text-sm sm:text-base"
+                  className="admin-input text-sm sm:text-base"
                   required={index === 0}
                 />
                 {formData.achievements.length > 1 && (
@@ -232,7 +232,7 @@ const ExperienceForm = ({ initialData, onSubmit, onCancel }) => {
             <FiSave className="w-4 h-4" />
             {saving ? 'Sauvegarde...' : (initialData ? 'Mettre à Jour' : 'Sauvegarder')}
           </button>
-          <button type="button" onClick={onCancel} className="w-full sm:w-auto px-6 py-3 bg-primary/70 dark:bg-light/70 text-light dark:text-primary rounded-lg hover:bg-primary/80 dark:hover:bg-light/80 transition-colors flex items-center gap-2">
+          <button type="button" onClick={onCancel} className="admin-cancel-button">
             <FiX className="w-4 h-4" />
             Annuler
           </button>

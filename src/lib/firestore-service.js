@@ -673,7 +673,7 @@ class FirestoreService {
         topReferrers
       };
     } catch (error) {
-      console.error('Error fetching analytics data:', error);
+      
       return {
         totalVisitors: 0,
         cvDownloads: 0,

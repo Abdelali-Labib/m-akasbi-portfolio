@@ -97,7 +97,7 @@ const ModernAdminLayout = ({ children, activeSection, onSectionChange }) => {
       )}
 
       {/* Sidebar */}
-      <aside className={`fixed top-0 left-0 z-50 h-full w-64 bg-white dark:bg-primary border-r border-gray-200 dark:border-gray-800 transform transition-transform duration-300 ease-in-out flex flex-col ${
+      <aside className={`fixed top-0 left-0 z-50 h-full w-64 bg-white dark:bg-primary border-r border-primary/20 dark:border-light/20 transform transition-transform duration-300 ease-in-out flex flex-col ${
         sidebarOpen ? 'translate-x-0' : '-translate-x-full'
       } lg:translate-x-0`}>
         {/* Sidebar Header */}
@@ -115,7 +115,7 @@ const ModernAdminLayout = ({ children, activeSection, onSectionChange }) => {
               onClick={() => setSidebarOpen(false)}
               className="lg:hidden p-2 rounded-lg hover:bg-primary/10 dark:hover:bg-light/10 transition-colors"
             >
-              <FiX className="w-5 h-5 text-gray-500" />
+              <FiX className="w-5 h-5 text-primary/60 dark:text-light/60" />
             </button>
           </div>
         </div>
@@ -135,7 +135,7 @@ const ModernAdminLayout = ({ children, activeSection, onSectionChange }) => {
         </nav>
 
         {/* Logout Button */}
-        <div className="p-3 border-t border-gray-200 dark:border-gray-800">
+        <div className="p-3 border-t border-primary/20 dark:border-light/20">
           <button
             onClick={handleLogout}
             className="w-full flex items-center gap-3 py-2 px-3 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/10 rounded-lg transition-colors"
@@ -149,14 +149,14 @@ const ModernAdminLayout = ({ children, activeSection, onSectionChange }) => {
       {/* Main Content */}
       <div className="lg:ml-64">
         {/* Top Header */}
-        <header className="bg-white dark:bg-primary border-b border-gray-200 dark:border-gray-800 sticky top-0 z-30">
+        <header className="bg-white dark:bg-primary border-b border-primary/20 dark:border-light/20 sticky top-0 z-30">
           <div className="px-6 py-4 flex items-center justify-between">
             <div className="flex items-center gap-4">
               <button
                 onClick={() => setSidebarOpen(true)}
                 className="lg:hidden p-2 rounded-lg hover:bg-primary/10 dark:hover:bg-light/10 transition-colors"
               >
-                <FiMenu className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+                <FiMenu className="w-5 h-5 text-primary/70 dark:text-light/70" />
               </button>
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-accent rounded-lg flex items-center justify-center">
@@ -175,7 +175,7 @@ const ModernAdminLayout = ({ children, activeSection, onSectionChange }) => {
                 className="relative p-2 rounded-lg hover:bg-primary/10 dark:hover:bg-light/10 transition-colors"
                 aria-label={`Voir les messages. ${unreadCount} non lus`}
               >
-                <FiMail className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+                <FiMail className="w-5 h-5 text-primary/70 dark:text-light/70" />
                 {unreadCount > 0 && (
                                     <span className="absolute top-0 right-0 h-5 min-w-[1.25rem] px-1 rounded-full bg-red-500 text-white text-xs flex items-center justify-center font-bold">
                     {unreadCount}
@@ -187,7 +187,7 @@ const ModernAdminLayout = ({ children, activeSection, onSectionChange }) => {
               <div className="hidden sm:flex items-center gap-3">
                 <div className="text-right">
                   <p className="text-sm font-medium text-primary dark:text-light">{user?.displayName || 'Admin'}</p>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">{user?.email}</p>
+                  <p className="text-xs text-primary/60 dark:text-light/60">{user?.email}</p>
                 </div>
               </div>
               <ThemeToggle />

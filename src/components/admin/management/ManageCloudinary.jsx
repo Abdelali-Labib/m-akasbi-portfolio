@@ -415,16 +415,16 @@ const ManageCloudinary = () => {
       {/* Files List */}
       <div>
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">Fichiers ({filteredFiles.length})</h2>
+          <h2 className="text-xl font-semibold text-primary dark:text-light">Fichiers ({filteredFiles.length})</h2>
           <div className="flex items-center">
             <input
               type="checkbox"
               id="selectAll"
               onChange={handleSelectAll}
               checked={filteredFiles.length > 0 && selectedFiles.length === filteredFiles.length}
-              className="h-4 w-4 rounded border-gray-300 text-accent focus:ring-accent"
+              className="h-4 w-4 rounded border-primary/30 dark:border-light/30 text-accent focus:ring-accent"
             />
-            <label htmlFor="selectAll" className="ml-2 text-sm text-gray-600 dark:text-gray-300">Tout sélectionner</label>
+            <label htmlFor="selectAll" className="ml-2 text-sm text-primary/70 dark:text-light/70">Tout sélectionner</label>
           </div>
         </div>
         {loading ? (
@@ -433,13 +433,13 @@ const ManageCloudinary = () => {
           </div>
         ) : filteredFiles.length === 0 ? (
           <div className="text-center py-12 bg-light/50 dark:bg-primary/50 rounded-lg border border-primary/20 dark:border-light/20">
-            <div className="text-gray-400 dark:text-gray-500 mb-4">
+            <div className="text-primary/40 dark:text-light/40 mb-4">
               <FiCloud className="mx-auto h-12 w-12 mb-4" />
             </div>
-            <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">
+            <h3 className="text-lg font-medium text-primary dark:text-light mb-2">
               {searchTerm || filterType !== 'all' ? 'Aucun fichier trouvé' : 'Aucun fichier uploadé'}
             </h3>
-            <p className="text-gray-500 dark:text-gray-400">
+            <p className="text-primary/60 dark:text-light/60">
               {searchTerm || filterType !== 'all' ? 'Essayez de modifier vos critères de recherche.' : 'Commencez par uploader votre premier fichier.'}
             </p>
           </div>

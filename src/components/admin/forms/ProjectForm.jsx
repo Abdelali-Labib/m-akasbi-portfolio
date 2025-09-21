@@ -199,13 +199,13 @@ const ProjectForm = ({ initialData, onSubmit, onCancel }) => {
   };
 
   return (
-    <div className="border border-primary/20 dark:border-light/20 rounded-lg p-6 mb-8 bg-white dark:bg-primary">
+    <div className="border border-primary/20 dark:border-light/20 rounded-lg p-6 mb-8">
       <h2 className="text-xl font-semibold mb-6 text-primary dark:text-light">{initialData ? 'Modifier Projet' : 'Ajouter Projet'}</h2>
       <form onSubmit={handleSubmit} className="space-y-6">
           {/* Type Selector - First Field */}
           <div>
             <label className="block text-sm font-medium mb-2 text-primary dark:text-light">Type de Projet</label>
-            <select name="type" value={formData.type} onChange={handleInputChange} className="w-full px-3 py-2 rounded border border-primary/20 dark:border-light/20 bg-white dark:bg-primary text-primary dark:text-light" required>
+            <select name="type" value={formData.type} onChange={handleInputChange} className="admin-input" required>
               <option value="image">Image</option>
               <option value="video">Vidéo</option>
               <option value="playlist">Playlist</option>
@@ -230,7 +230,7 @@ const ProjectForm = ({ initialData, onSubmit, onCancel }) => {
               </div>
               <div>
                 <label className="block text-sm font-medium mb-2 text-primary dark:text-light">Description</label>
-                <textarea name="description" value={formData.description} onChange={handleInputChange} className="w-full px-3 py-2 rounded border border-primary/20 dark:border-light/20 bg-white dark:bg-primary text-primary dark:text-light" rows="3" required />
+                <textarea name="description" value={formData.description} onChange={handleInputChange} className="admin-input" rows="3" required />
               </div>
             </>
           )}
@@ -244,13 +244,13 @@ const ProjectForm = ({ initialData, onSubmit, onCancel }) => {
                   name="videoUrl" 
                   value={formData.videoUrl} 
                   onChange={handleInputChange} 
-                  className="w-full px-3 py-2 rounded border border-primary/20 dark:border-light/20 bg-white dark:bg-primary text-primary dark:text-light" 
+                  className="admin-input" 
                   required 
                 />
               </div>
               <div>
                 <label className="block text-sm font-medium mb-2 text-primary dark:text-light">Titre</label>
-                <input name="title" value={formData.title} onChange={handleInputChange} className="w-full px-3 py-2 rounded border border-primary/20 dark:border-light/20 bg-white dark:bg-primary text-primary dark:text-light" required />
+                <input name="title" value={formData.title} onChange={handleInputChange} className="admin-input" required />
               </div>
               <div>
                 <label className="block text-sm font-medium mb-2 text-primary dark:text-light">
@@ -260,10 +260,9 @@ const ProjectForm = ({ initialData, onSubmit, onCancel }) => {
                   name="thumbnailUrl" 
                   value={initialData ? formData.thumbnailUrl : getAutoThumbnailUrl()} 
                   onChange={handleInputChange}
-                  className={`w-full px-3 py-2 rounded border border-primary/20 dark:border-light/20 text-primary dark:text-light ${
-                    initialData ? 'bg-white dark:bg-primary' : 'bg-gray-100 dark:bg-gray-700'
-                  }`}
+                  className="admin-input"
                   disabled={!initialData}
+                  placeholder={!initialData ? "Auto-généré depuis l'URL vidéo" : ""}
                 />
                 {(initialData ? formData.thumbnailUrl : getAutoThumbnailUrl()) && (
                   <div className="mt-2">
@@ -319,7 +318,7 @@ const ProjectForm = ({ initialData, onSubmit, onCancel }) => {
               <FiSave className="w-4 h-4" />
               {saving ? 'Sauvegarde...' : (initialData ? 'Mettre à Jour' : 'Sauvegarder')}
             </button>
-            <button type="button" onClick={onCancel} className="w-full sm:w-auto px-6 py-3 text-light dark:text-primary rounded-lg transition-colors flex items-center gap-2">
+            <button type="button" onClick={onCancel} className="admin-cancel-button">
               <FiX className="w-4 h-4" />
               Annuler
             </button>

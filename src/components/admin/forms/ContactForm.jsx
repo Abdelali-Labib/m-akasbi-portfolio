@@ -85,8 +85,24 @@ const ContactForm = ({ initialData, onSubmit, onCancel }) => {
             value={formData.title}
             onChange={handleInputChange}
             required
-            className="w-full px-3 py-2 rounded border border-primary/20 dark:border-light/20 text-primary dark:text-light"
+            className="admin-input"
           />
+        </div>
+
+        <div>
+          <label className="block mb-2 text-sm font-medium text-primary dark:text-light">Type</label>
+          <select
+            name="type"
+            value={formData.type}
+            onChange={handleInputChange}
+            className="admin-input"
+            required
+          >
+            <option value="">Sélectionnez un type</option>
+            <option value="email">Email</option>
+            <option value="phone">Téléphone</option>
+            <option value="whatsapp">WhatsApp</option>
+          </select>
         </div>
 
         <div>
@@ -97,7 +113,7 @@ const ContactForm = ({ initialData, onSubmit, onCancel }) => {
             value={formData.value}
             onChange={handleInputChange}
             required
-            className="w-full px-3 py-2 rounded border border-primary/20 dark:border-light/20 text-primary dark:text-light"
+            className="admin-input"
           />
         </div>
 
@@ -114,7 +130,7 @@ const ContactForm = ({ initialData, onSubmit, onCancel }) => {
           <button
             type="button"
             onClick={onCancel}
-            className="w-full sm:w-auto px-6 py-3 bg-primary/70 dark:bg-light/70 text-light dark:text-primary rounded-lg hover:bg-primary/80 dark:hover:bg-light/80 transition-colors flex items-center gap-2"
+            className="admin-cancel-button"
           >
             <FiX className="w-4 h-4" />
             Annuler

@@ -18,7 +18,6 @@ export async function POST(request) {
   try {
     // Check Cloudinary configuration
     if (!process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || !process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY || !process.env.CLOUDINARY_API_SECRET) {
-      console.error('Missing Cloudinary environment variables');
       return NextResponse.json({ error: 'Cloudinary configuration missing' }, { status: 500 });
     }
 
@@ -48,10 +47,10 @@ export async function POST(request) {
         },
         (error, result) => {
           if (error) {
-            console.error('Cloudinary upload stream error:', error);
+            
             reject(new Error(`Cloudinary upload failed: ${error.message}`));
           } else {
-            console.log('Cloudinary upload successful:', result?.public_id);
+            
             resolve(result);
           }
         }
@@ -72,7 +71,6 @@ export async function POST(request) {
     });
 
   } catch (error) {
-    console.error('File upload API error:', error.message);
     return NextResponse.json({ error: 'Something went wrong during file upload.' }, { status: 500 });
   }
 }

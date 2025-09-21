@@ -10,6 +10,12 @@ export default function CustomAnalyticsTracker() {
 
   const trackPageview = useCallback(async () => {
     if (!visitorIdRef.current) return;
+    
+    // Don't track admin, login, or already tracked pages
+    if (pathname.startsWith('/admin') || pathname === '/login') {
+      return;
+    }
+    
     // Prevent back-to-back duplicate sends in same render cycle
     if (hasTrackedRef.current) return;
 
@@ -18,14 +24,14 @@ export default function CustomAnalyticsTracker() {
     try {
       if (typeof window !== 'undefined') {
         const lastTrackedDate = localStorage.getItem('analytics_tracked_date');
-        if (lastTrackedDate === today) return;
+        const sessionTracked = sessionStorage.getItem('analytics_session_tracked');
+        
+        // If already tracked today OR already tracked in this session, don't track again
+        if (lastTrackedDate === today || sessionTracked === 'true') {
+          return;
+        }
       }
     } catch (_) {}
-
-  // ...existing code...
-    if (pathname.startsWith('/admin')) {
-      return;
-    }
 
     try {
       const response = await fetch('/api/track', {
@@ -55,6 +61,7 @@ export default function CustomAnalyticsTracker() {
     }
   }, [pathname]);
 
+  // Initialize visitor ID only once
   useEffect(() => {
     let visitorId = localStorage.getItem('analytics_visitor_id');
     if (!visitorId) {
@@ -63,13 +70,15 @@ export default function CustomAnalyticsTracker() {
     }
     visitorIdRef.current = visitorId;
 
-    const sessionStart = sessionStorage.getItem('analytics_session_start');
-    if (!sessionStart) {
+    // Create unique session ID to prevent double tracking in same session
+    let sessionId = sessionStorage.getItem('analytics_session_id');
+    if (!sessionId) {
+      sessionId = 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+      sessionStorage.setItem('analytics_session_id', sessionId);
       sessionStorage.setItem('analytics_session_start', Date.now().toString());
+      // Clear the session tracked flag for new session
+      sessionStorage.removeItem('analytics_session_tracked');
     }
-
-    // Attempt to track; function will ensure only once per day
-    trackPageview();
 
     const handleBeforeUnload = () => {
       const startTime = parseInt(sessionStorage.getItem('analytics_session_start') || '0');
@@ -88,7 +97,25 @@ export default function CustomAnalyticsTracker() {
     return () => {
       window.removeEventListener('beforeunload', handleBeforeUnload);
     };
-  }, [trackPageview]);
+  }, []); // Remove trackPageview dependency
+
+  // Track pageview on pathname changes
+  useEffect(() => {
+    // Only reset and track for valid paths
+    if (!pathname.startsWith('/admin') && pathname !== '/login') {
+      // Reset tracking flag when pathname changes to a trackable path
+      hasTrackedRef.current = false;
+      
+      if (visitorIdRef.current) {
+        // Add a small delay to prevent rapid-fire calls
+        const timeoutId = setTimeout(() => {
+          trackPageview();
+        }, 100);
+        
+        return () => clearTimeout(timeoutId);
+      }
+    }
+  }, [pathname, trackPageview]);
 
   // ...existing code...
   useEffect(() => {

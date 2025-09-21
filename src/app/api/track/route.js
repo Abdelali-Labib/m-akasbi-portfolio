@@ -18,9 +18,9 @@ export async function POST(request) {
     
     const { type, visitorId, pathname, referrer: pageReferrer, userAgent, data } = body;
 
-    // Do not track visits to admin pages
-    if (pathname && pathname.startsWith('/admin')) {
-      return NextResponse.json({ success: true, message: 'Admin visit not tracked.' });
+    // Do not track visits to admin pages or login page
+    if (pathname && (pathname.startsWith('/admin') || pathname === '/login')) {
+      return NextResponse.json({ success: true, message: 'Admin/login visit not tracked.' });
     }
     
     // Get headers for country detection

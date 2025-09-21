@@ -233,16 +233,24 @@ const ProjectsClient = ({ videos, playlists, images, content = {} }) => {
                 </p>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-10">
-                {videos.map((video, index) => (
-                  <ProjectCard
-                    key={video.id}
-                    project={video}
-                    type="video"
-                    onClick={() => openModal(video, "video")}
-                    index={index}
-                    content={pageContent.projectCard}
-                  />
-                ))}
+                {videos && videos.length > 0 ? (
+                  videos.map((video, index) => (
+                    <ProjectCard
+                      key={video.id}
+                      project={video}
+                      type="video"
+                      onClick={() => openModal(video, "video")}
+                      index={index}
+                      content={pageContent.projectCard}
+                    />
+                  ))
+                ) : (
+                  <div className="col-span-full text-center py-12">
+                    <p className="text-lg text-primary/70 dark:text-light/70">
+                      Aucune vidéo à afficher pour le moment.
+                    </p>
+                  </div>
+                )}
               </div>
             </div>
           </AnimatedItem>
@@ -263,16 +271,24 @@ const ProjectsClient = ({ videos, playlists, images, content = {} }) => {
                 </p>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-10">
-                {playlists.map((playlist, index) => (
-                  <ProjectCard
-                    key={playlist.id}
-                    project={playlist}
-                    type="playlist"
-                    onClick={() => openModal(playlist, "playlist")}
-                    index={index}
-                    content={pageContent.projectCard}
-                  />
-                ))}
+                {playlists && playlists.length > 0 ? (
+                  playlists.map((playlist, index) => (
+                    <ProjectCard
+                      key={playlist.id}
+                      project={playlist}
+                      type="playlist"
+                      onClick={() => openModal(playlist, "playlist")}
+                      index={index}
+                      content={pageContent.projectCard}
+                    />
+                  ))
+                ) : (
+                  <div className="col-span-full text-center py-12">
+                    <p className="text-lg text-primary/70 dark:text-light/70">
+                      Aucune playlist à afficher pour le moment.
+                    </p>
+                  </div>
+                )}
               </div>
             </div>
           </AnimatedItem>
@@ -293,14 +309,22 @@ const ProjectsClient = ({ videos, playlists, images, content = {} }) => {
                 </p>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-10">
-                {images.map((image, index) => (
-                  <CreativeImageCard
-                    key={image.id}
-                    image={image}
-                    onClick={() => handleImageClick(index)}
-                    index={index}
-                  />
-                ))}
+                {images && images.length > 0 ? (
+                  images.map((image, index) => (
+                    <CreativeImageCard
+                      key={image.id}
+                      image={image}
+                      onClick={() => handleImageClick(index)}
+                      index={index}
+                    />
+                  ))
+                ) : (
+                  <div className="col-span-full text-center py-12">
+                    <p className="text-lg text-primary/70 dark:text-light/70">
+                      Aucune image à afficher pour le moment.
+                    </p>
+                  </div>
+                )}
               </div>
             </div>
           </AnimatedItem>

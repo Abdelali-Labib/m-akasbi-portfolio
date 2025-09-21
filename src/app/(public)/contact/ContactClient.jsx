@@ -177,27 +177,40 @@ const ContactClient = ({ contactInfo }) => {
               </div>
               {useMemo(() => (
                 <div className="space-y-8">
-                  {contactInfo.map((contact, index) => {
-                    const getIcon = (type) => {
-                      switch (type) {
-                        case 'phone': return FaPhoneAlt;
-                        case 'email': return FaEnvelope;
-                        case 'whatsapp': return FaWhatsapp;
-                        case 'location': return FaMapMarkerAlt;
-                        default: return FaEnvelope;
-                      }
-                    };
-                    return (
-                      <ContactInfoCard
-                        key={contact.id}
-                        icon={getIcon(contact.type)}
-                        title={contact.title}
-                        value={contact.value}
-                        href={contact.href}
-                        delay={300 + (index * 100)}
-                      />
-                    );
-                  })}
+                  {contactInfo && contactInfo.length > 0 ? (
+                    contactInfo.map((contact, index) => {
+                      const getIcon = (type) => {
+                        switch (type) {
+                          case 'phone': return FaPhoneAlt;
+                          case 'email': return FaEnvelope;
+                          case 'whatsapp': return FaWhatsapp;
+                          default: return FaPhoneAlt;
+                        }
+                      };
+                      
+                      const Icon = getIcon(contact.type);
+                      const href = contact.type === 'email' ? `mailto:${contact.value}` : 
+                                  contact.type === 'whatsapp' ? `https://wa.me/${contact.value.replace(/\D/g, '')}` : 
+                                  `tel:${contact.value}`;
+                      
+                      return (
+                        <ContactInfoCard
+                          key={contact.id}
+                          icon={Icon}
+                          title={contact.title}
+                          value={contact.value}
+                          href={href}
+                          delay={index * 200}
+                        />
+                      );
+                    })
+                  ) : (
+                    <div className="text-center py-12">
+                      <p className="text-lg text-primary/70 dark:text-light/70">
+                        Aucune information de contact disponible pour le moment.
+                      </p>
+                    </div>
+                  )}
                 </div>
               ), [contactInfo, contactInfoInView])}
             </div>

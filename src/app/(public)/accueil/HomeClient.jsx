@@ -66,17 +66,21 @@ export default function HomeClient({
                     {content.name}
                   </span>
                 </h1>
-                <p className="subtitle">{homeContent.subtitle}</p>
+                {homeContent.subtitle && (
+                  <p className="subtitle">{homeContent.subtitle}</p>
+                )}
               </div>
             </AnimatedItem>
 
-            <AnimatedItem delay={400}>
-              <div className="description-section">
-                <p className="description-text" style={{ whiteSpace: 'pre-line' }}>
-                  {homeContent.description}
-                </p>
-              </div>
-            </AnimatedItem>
+            {homeContent.description && (
+              <AnimatedItem delay={400}>
+                <div className="description-section">
+                  <p className="description-text" style={{ whiteSpace: 'pre-line' }}>
+                    {homeContent.description}
+                  </p>
+                </div>
+              </AnimatedItem>
+            )}
 
             <AnimatedItem delay={500}>
               <div className="action-buttons">
@@ -104,12 +108,14 @@ export default function HomeClient({
               </div>
             </AnimatedItem>
 
-            <AnimatedItem delay={600}>
-              <div className="social-section">
-                <p className="social-label text-sm sm:text-base text-primary/60 dark:text-light/60 mb-6 sm:mb-8 text-center xl:text-left">{content.followMe}</p>
-                <SocialMedia socialLinks={socialMedia} />
-              </div>
-            </AnimatedItem>
+            {socialMedia && Object.keys(socialMedia).length > 0 && (
+              <AnimatedItem delay={600}>
+                <div className="social-section">
+                  <p className="social-label text-sm sm:text-base text-primary/60 dark:text-light/60 mb-6 sm:mb-8 text-center xl:text-left">{content.followMe}</p>
+                  <SocialMedia socialLinks={socialMedia} />
+                </div>
+              </AnimatedItem>
+            )}
           </div>
         </div>
 
@@ -120,9 +126,11 @@ export default function HomeClient({
         </div>
       </div>
 
-      <div className="section-spacing">
-        <Statistics statistics={statistics} content={pageContent.statistics} />
-      </div>
+      {statistics && statistics.length > 0 && (
+        <div className="section-spacing">
+          <Statistics statistics={statistics} content={pageContent.statistics} />
+        </div>
+      )}
     </section>
   );
 }

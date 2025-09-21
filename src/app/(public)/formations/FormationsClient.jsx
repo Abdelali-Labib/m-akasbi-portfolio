@@ -157,25 +157,41 @@ const FormationsClient = ({ formations }) => {
 
           {activeTab === 'academic' && (
             <div role="tabpanel" aria-labelledby="tab-academic" className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
-              {academicFormations.map((formation, index) => (
-                <FormationCard
-                  key={formation.id}
-                  formation={formation}
-                  index={index}
-                />
-              ))}
+              {academicFormations && academicFormations.length > 0 ? (
+                academicFormations.map((formation, index) => (
+                  <FormationCard
+                    key={formation.id}
+                    formation={formation}
+                    index={index}
+                  />
+                ))
+              ) : (
+                <div className="col-span-full text-center py-12">
+                  <p className="text-lg text-primary/70 dark:text-light/70">
+                    Aucune formation académique à afficher pour le moment.
+                  </p>
+                </div>
+              )}
             </div>
           )}
           
           {activeTab === 'certificate' && (
             <div role="tabpanel" aria-labelledby="tab-certificate" className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
-              {certifications.map((formation, index) => (
-                <FormationCard
-                  key={formation.id}
-                  formation={formation}
-                  index={index}
-                />
-              ))}
+              {certifications && certifications.length > 0 ? (
+                certifications.map((formation, index) => (
+                  <FormationCard
+                    key={formation.id}
+                    formation={formation}
+                    index={index}
+                  />
+                ))
+              ) : (
+                <div className="col-span-full text-center py-12">
+                  <p className="text-lg text-primary/70 dark:text-light/70">
+                    Aucune certification à afficher pour le moment.
+                  </p>
+                </div>
+              )}
             </div>
           )}
         </div>

@@ -104,20 +104,36 @@ const ExperiencesClient = ({ workExperiences, filmExperiences }) => {
 
           {activeTab === 'work' && (
             <div role="tabpanel" aria-labelledby="tab-work" className="space-y-8 lg:space-y-16">
-              {sortedWorkExperiences.map((experience, index) => (
-                <ExperienceCard
-                  key={experience.id}
-                  experience={experience}
-                  index={index}
-                />
-              ))}
+              {sortedWorkExperiences && sortedWorkExperiences.length > 0 ? (
+                sortedWorkExperiences.map((experience, index) => (
+                  <ExperienceCard
+                    key={experience.id}
+                    experience={experience}
+                    index={index}
+                  />
+                ))
+              ) : (
+                <div className="text-center py-12">
+                  <p className="text-lg text-primary/70 dark:text-light/70">
+                    Aucune expérience professionnelle à afficher pour le moment.
+                  </p>
+                </div>
+              )}
             </div>
           )}
           {activeTab === 'films' && (
             <div role="tabpanel" aria-labelledby="tab-films" className="space-y-6 lg:space-y-8">
-              {filmExperiences.map((item, index) => (
-                <FilmExperienceCard key={item.id} experience={item} index={index} />
-              ))}
+              {filmExperiences && filmExperiences.length > 0 ? (
+                filmExperiences.map((item, index) => (
+                  <FilmExperienceCard key={item.id} experience={item} index={index} />
+                ))
+              ) : (
+                <div className="text-center py-12">
+                  <p className="text-lg text-primary/70 dark:text-light/70">
+                    Aucune expérience cinématographique à afficher pour le moment.
+                  </p>
+                </div>
+              )}
             </div>
           )}
         </div>

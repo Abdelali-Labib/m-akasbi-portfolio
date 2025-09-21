@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { FiEdit, FiTrash2, FiPlus, FiBriefcase, FiFilm } from 'react-icons/fi';
+import { FiEdit, FiTrash2, FiPlus, FiBriefcase, FiFilm, FiAlertTriangle } from 'react-icons/fi';
 import ExperienceForm from '../forms/ExperienceForm';
 import LoadingSpinner from '../ui/LoadingSpinner';
 import ConfirmationModal from '../ui/ConfirmationModal';

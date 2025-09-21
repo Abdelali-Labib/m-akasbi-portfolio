@@ -1,14 +1,19 @@
 rules_version = '2';
+
 service cloud.firestore {
   match /databases/{database}/documents {
+
+    // This function checks if the signed-in user is an admin.
+    // It verifies that the user's UID matches the document ID in the 'admins' collection
+    // AND that the email stored in that document also matches the user's token email.
+    // This is a secure way to confirm admin status.
     function isAdmin() {
-      return request.auth != null && 
-             request.auth.token.email != null &&
-             exists(/databases/$(database)/documents/admins/$(request.auth.token.email));
+      return request.auth != null &&
+        get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.email == request.auth.token.email;
     }
 
     // Admins collection: Only admins can read/write other admin records
-    match /admins/{email} {
+    match /admins/{userId} {
       allow read, write: if isAdmin();
     }
 
@@ -17,7 +22,7 @@ service cloud.firestore {
       allow read, write: if isAdmin();
     }
 
-    // CV Downloads collection: Only admins can read download records
+    // CV Downloads collection (if you create it): Only admins can read download records
     match /cvDownloads/{downloadId} {
       allow read, write: if isAdmin();
     }
@@ -29,13 +34,14 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
-    // Analytics collection: Public can write, admins can read
+    // Analytics collection: Anyone can write, but only admins can read
     match /analytics/{document=**} {
       allow read: if isAdmin();
       allow write: if true;
     }
 
     // All other collections (projects, skills, etc.): Public read, admin write
+    // This rule must be last as it is a broad wildcard.
     match /{collection}/{document=**} {
       allow read: if true;
       allow write: if isAdmin();

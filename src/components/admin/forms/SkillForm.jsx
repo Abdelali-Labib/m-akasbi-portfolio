@@ -144,7 +144,7 @@ const SkillForm = ({ initialData, onSubmit, onCancel }) => {
                   <div className="flex justify-center">
                     <div className="relative w-16 h-16 rounded-lg border border-primary/20 dark:border-light/20 overflow-hidden">
                       <img
-                        src={formData.icon.startsWith('http') ? formData.icon : `https://res.cloudinary.com/${process.env.CLOUDINARY_CLOUD_NAME}/image/upload/${formData.icon}`}
+                        src={formData.icon.startsWith('http') ? formData.icon : `https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/${formData.icon}`}
                         alt="Aperçu de l'icône"
                         className="w-full h-full object-contain"
                         onError={(e) => {

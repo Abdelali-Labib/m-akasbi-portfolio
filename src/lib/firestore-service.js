@@ -70,7 +70,7 @@ class FirestoreService {
     }
     
   // ...existing code...
-    const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
+    const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
     if (!cloudName) {
       return url;
     }

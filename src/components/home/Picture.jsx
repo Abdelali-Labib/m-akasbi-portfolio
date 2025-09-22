@@ -10,7 +10,7 @@ function Picture({ profileInfo = {} }) {
   const [imageLoading, setImageLoading] = useState(true);
   
   // Use profile picture URL from props, fallback to environment variable if not provided
-  const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
+  const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
   const profilePictureUrl = profileInfo.profilePictureUrl || `https://res.cloudinary.com/${cloudName}/image/upload/picture.png`;
 
   const handleImageError = () => {

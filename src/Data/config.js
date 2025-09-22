@@ -1,6 +1,6 @@
 // Cloudinary configuration
 const CLOUDINARY_CONFIG = {
-  cloudName: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME, 
+  cloudName: process.env.CLOUDINARY_CLOUD_NAME, 
   baseUrl: 'https://res.cloudinary.com'
 };
 

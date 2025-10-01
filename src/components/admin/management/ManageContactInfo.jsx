@@ -15,7 +15,7 @@ const ManageContactInfo = () => {
 
   const fetchContactInfo = async () => {
     try {
-      const response = await fetch('/api/admin/contact');
+      const response = await fetch('/api/admin/contact', { cache: 'no-store' });
       const result = await response.json();
       if (result.success && result.data) {
         setContacts(result.data);

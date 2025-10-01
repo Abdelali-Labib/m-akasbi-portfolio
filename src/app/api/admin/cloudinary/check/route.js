@@ -1,4 +1,5 @@
 import { v2 as cloudinary } from 'cloudinary';
+export const dynamic = 'force-dynamic';
 
 // Configure Cloudinary
 cloudinary.config({
@@ -19,10 +20,10 @@ export async function GET(request) {
     // Check if resource exists in Cloudinary
     try {
       await cloudinary.api.resource(name);
-      return Response.json({ exists: true });
+      return Response.json({ exists: true }, { headers: { 'Cache-Control': 'no-store' } });
     } catch (error) {
       if (error.http_code === 404) {
-        return Response.json({ exists: false });
+        return Response.json({ exists: false }, { headers: { 'Cache-Control': 'no-store' } });
       }
       throw error;
     }
@@ -30,6 +31,6 @@ export async function GET(request) {
     return Response.json({ 
       error: 'Failed to check resource existence',
       exists: false 
-    }, { status: 500 });
+    }, { status: 500, headers: { 'Cache-Control': 'no-store' } });
   }
 }

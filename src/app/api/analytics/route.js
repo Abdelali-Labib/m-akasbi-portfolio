@@ -1,5 +1,7 @@
 // Google Analytics integration removed
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(request) {
   try {
     const { dbAdmin } = await import('@/lib/firebase-admin');
@@ -45,7 +47,7 @@ export async function GET(request) {
       topCountries: topCountries.map(item => ({ country: item.country, count: item.users })),
       devices: deviceCategories.map(item => ({ device: item.device, count: item.users })),
       topReferrers: trafficSources.map(item => ({ referrer: item.source, count: item.users }))
-    }), { status: 200, headers: { 'Content-Type': 'application/json' } });
+    }), { status: 200, headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' } });
 
   } catch (error) {
     return new Response(JSON.stringify({ 
@@ -53,7 +55,7 @@ export async function GET(request) {
       details: error.message 
     }), {
       status: 500,
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' },
     });
   }
 }

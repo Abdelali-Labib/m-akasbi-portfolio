@@ -19,7 +19,7 @@ const ManageExperiences = () => {
 
   const fetchExperiences = async () => {
     try {
-      const response = await fetch('/api/admin/experiences');
+      const response = await fetch('/api/admin/experiences', { cache: 'no-store' });
       if (!response.ok) throw new Error('Failed to fetch experiences');
       const result = await response.json();
       const data = result.data || result; // Handle both response formats

@@ -30,7 +30,7 @@ const ManageSkills = () => {
 
   const fetchSkills = async () => {
     try {
-      const response = await fetch('/api/admin/skills');
+      const response = await fetch('/api/admin/skills', { cache: 'no-store' });
       const result = await response.json();
       
       if (result.success) {

@@ -1,5 +1,6 @@
 import admin from 'firebase-admin';
 import { dbAdmin as db } from "@/lib/firebase-admin";
+export const dynamic = 'force-dynamic';
 import { Resend } from 'resend';
 
 // Initialize Resend with the API key from environment variables
@@ -15,7 +16,7 @@ export async function POST(req) {
     if (!name || !email || !subject || !message || !adminEmail) {
       return new Response(
         JSON.stringify({ error: "All fields are required and admin email must be set." }),
-        { status: 400, headers: { "Content-Type": "application/json" } }
+        { status: 400, headers: { "Content-Type": "application/json", 'Cache-Control': 'no-store' } }
       );
     }
 
@@ -24,7 +25,7 @@ export async function POST(req) {
     if (!emailRegex.test(email)) {
       return new Response(
         JSON.stringify({ error: "Invalid email format." }),
-        { status: 400, headers: { "Content-Type": "application/json" } }
+        { status: 400, headers: { "Content-Type": "application/json", 'Cache-Control': 'no-store' } }
       );
     }
 
@@ -304,12 +305,12 @@ export async function POST(req) {
 
     return new Response(
       JSON.stringify({ message: "Message sent successfully!" }),
-      { status: 200, headers: { "Content-Type": "application/json" } }
+      { status: 200, headers: { "Content-Type": "application/json", 'Cache-Control': 'no-store' } }
     );
   } catch (error) {
     return new Response(
       JSON.stringify({ error: "An error occurred while processing your request." }),
-      { status: 500, headers: { "Content-Type": "application/json" } }
+      { status: 500, headers: { "Content-Type": "application/json", 'Cache-Control': 'no-store' } }
     );
   }
 }

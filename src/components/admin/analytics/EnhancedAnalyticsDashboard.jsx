@@ -37,6 +37,7 @@ const EnhancedAnalyticsDashboard = ({ analyticsData }) => {
   const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1024);
   const [sourceModal, setSourceModal] = useState({ isOpen: false, source: '', url: '' });
   const [initialLoading, setInitialLoading] = useState(true);
+  const [liveData, setLiveData] = useState(null);
 
   // Handle window resize
   useEffect(() => {
@@ -50,12 +51,33 @@ const EnhancedAnalyticsDashboard = ({ analyticsData }) => {
     }
   }, []);
 
-  // Simulate initial loading
+  // Simulate initial loading and kick off analytics fetch loop
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setInitialLoading(false);
-    }, 1000);
-    return () => clearTimeout(timer);
+    let isCancelled = false;
+    const controller = new AbortController();
+
+    const fetchAnalytics = async () => {
+      try {
+        const res = await fetch('/api/analytics', { cache: 'no-store', signal: controller.signal });
+        const json = await res.json();
+        if (!isCancelled && res.ok) setLiveData(json);
+      } catch (_) {}
+    };
+
+    // initial fetch and loading state
+    (async () => {
+      await fetchAnalytics();
+      if (!isCancelled) setInitialLoading(false);
+    })();
+
+    // lightweight polling for immediate updates
+    const intervalId = setInterval(fetchAnalytics, 10000);
+
+    return () => {
+      isCancelled = true;
+      controller.abort();
+      clearInterval(intervalId);
+    };
   }, []);
 
   // Date range options
@@ -145,7 +167,7 @@ const EnhancedAnalyticsDashboard = ({ analyticsData }) => {
   };
 
   // Get current data (filtered or original)
-  const currentData = filteredData || analyticsData || {
+  const currentData = filteredData || liveData || analyticsData || {
     totalVisitors: 0,
     cvDownloads: 0,
     visitorsByDay: [],
@@ -199,8 +221,10 @@ const EnhancedAnalyticsDashboard = ({ analyticsData }) => {
   const handleRefresh = async () => {
     setRefreshing(true);
     try {
-      window.location.reload();
-    } catch (error) {
+      const res = await fetch('/api/analytics', { cache: 'no-store' });
+      const json = await res.json();
+      if (res.ok) setLiveData(json);
+    } catch (_) {
     } finally {
       setRefreshing(false);
     }

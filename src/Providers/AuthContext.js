@@ -23,6 +23,7 @@ export const AuthProvider = ({ children }) => {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email: user.email }),
+            cache: 'no-store'
           });
           const data = await response.json();
           if (data.isAdmin) {

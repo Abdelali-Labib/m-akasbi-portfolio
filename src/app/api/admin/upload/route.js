@@ -1,5 +1,6 @@
 import { v2 as cloudinary } from 'cloudinary';
 import { NextRequest, NextResponse } from 'next/server';
+export const dynamic = 'force-dynamic';
 
 // Configure Cloudinary
 cloudinary.config({
@@ -15,7 +16,7 @@ export async function POST(request) {
     const fieldName = formData.get('fieldName');
 
     if (!file) {
-      return NextResponse.json({ error: 'No file provided' }, { status: 400 });
+      return NextResponse.json({ error: 'No file provided' }, { status: 400, headers: { 'Cache-Control': 'no-store' } });
     }
 
     // Use exact original filename without extension as public_id
@@ -28,7 +29,7 @@ export async function POST(request) {
       if (existingFile) {
         return NextResponse.json({ 
           error: 'Un fichier avec ce nom existe déjà. Veuillez renommer votre fichier.' 
-        }, { status: 409 });
+        }, { status: 409, headers: { 'Cache-Control': 'no-store' } });
       }
     } catch (error) {
       // File doesn't exist, continue with upload
@@ -65,12 +66,12 @@ export async function POST(request) {
       filename: filename,
       url: result.secure_url,
       publicId: result.public_id
-    });
+    }, { headers: { 'Cache-Control': 'no-store' } });
 
   } catch (error) {
     return NextResponse.json(
       { error: 'Upload failed', details: error.message },
-      { status: 500 }
+      { status: 500, headers: { 'Cache-Control': 'no-store' } }
     );
   }
 }

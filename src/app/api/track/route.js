@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { headers } from 'next/headers';
+export const dynamic = 'force-dynamic';
 
 export async function POST(request) {
   try {
@@ -8,19 +9,19 @@ export async function POST(request) {
     try {
       const text = await request.text();
       if (!text || text.trim() === '') {
-        return NextResponse.json({ success: true, message: 'Empty request body' });
+      return NextResponse.json({ success: true, message: 'Empty request body' }, { headers: { 'Cache-Control': 'no-store' } });
       }
       body = JSON.parse(text);
     } catch (parseError) {
       
-      return NextResponse.json({ success: true, message: 'Invalid JSON body' });
+      return NextResponse.json({ success: true, message: 'Invalid JSON body' }, { headers: { 'Cache-Control': 'no-store' } });
     }
     
     const { type, visitorId, pathname, referrer: pageReferrer, userAgent, data } = body;
 
     // Do not track visits to admin pages or login page
     if (pathname && (pathname.startsWith('/admin') || pathname === '/login')) {
-      return NextResponse.json({ success: true, message: 'Admin/login visit not tracked.' });
+      return NextResponse.json({ success: true, message: 'Admin/login visit not tracked.' }, { headers: { 'Cache-Control': 'no-store' } });
     }
     
     // Get headers for country detection
@@ -60,8 +61,8 @@ export async function POST(request) {
       
     }
     
-    return NextResponse.json({ success: true });
+    return NextResponse.json({ success: true }, { headers: { 'Cache-Control': 'no-store' } });
   } catch (error) {
-    return NextResponse.json({ error: 'Failed to track analytics' }, { status: 500 });
+    return NextResponse.json({ error: 'Failed to track analytics' }, { status: 500, headers: { 'Cache-Control': 'no-store' } });
   }
 }

@@ -46,6 +46,7 @@ export default function CustomAnalyticsTracker() {
           referrer: document.referrer || 'Direct',
           userAgent: navigator.userAgent,
         }),
+        cache: 'no-store'
       });
 
       const result = await response.json();
@@ -138,6 +139,7 @@ export default function CustomAnalyticsTracker() {
               ...eventData
             }
           }),
+          cache: 'no-store'
         });
         
         const result = await response.json();

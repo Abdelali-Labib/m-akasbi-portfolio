@@ -1,5 +1,7 @@
 import FirestoreService from '@/lib/firestore-service';
 import { dbAdmin } from '@/lib/firebase-admin';
+import { revalidatePath } from 'next/cache';
+export const dynamic = 'force-dynamic';
 
 export async function GET() {
   try {
@@ -32,13 +34,13 @@ export async function GET() {
       data: projects,
       count: projects.length,
       message: projects.length === 0 ? 'No projects found in database' : `Found ${projects.length} projects`
-    });
+    }, { headers: { 'Cache-Control': 'no-store' } });
   } catch (error) {
     return Response.json({ 
       success: false, 
       error: error.message,
       details: process.env.NODE_ENV === 'development' ? error.stack : undefined
-    }, { status: 500 });
+    }, { status: 500, headers: { 'Cache-Control': 'no-store' } });
   }
 }
 
@@ -50,7 +52,7 @@ export async function POST(request) {
       createdAt: new Date(),
       updatedAt: new Date()
     });
-    
+    revalidatePath('/projets');
     return Response.json({ success: true, id: docRef.id });
   } catch (error) {
     return Response.json({ success: false, error: error.message }, { status: 500 });
@@ -64,7 +66,7 @@ export async function PUT(request) {
       ...data,
       updatedAt: new Date()
     });
-    
+    revalidatePath('/projets');
     return Response.json({ success: true });
   } catch (error) {
     return Response.json({ success: false, error: error.message }, { status: 500 });
@@ -81,6 +83,7 @@ export async function DELETE(request) {
     }
     
     await dbAdmin.collection('projects').doc(id).delete();
+    revalidatePath('/projets');
     return Response.json({ success: true });
   } catch (error) {
     return Response.json({ success: false, error: error.message }, { status: 500 });

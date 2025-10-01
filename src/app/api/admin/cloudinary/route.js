@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { v2 as cloudinary } from 'cloudinary';
+export const dynamic = 'force-dynamic';
 
 // Configure Cloudinary
 cloudinary.config({
@@ -46,7 +47,7 @@ export async function GET() {
       files: allResources,
       total: allResources.length,
       message: `Found ${allResources.length} files`
-    });
+    }, { headers: { 'Cache-Control': 'no-store' } });
   } catch (error) {
     
     return NextResponse.json(
@@ -55,7 +56,7 @@ export async function GET() {
         details: process.env.NODE_ENV === 'development' ? error.message : undefined,
         stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
       },
-      { status: 500 }
+      { status: 500, headers: { 'Cache-Control': 'no-store' } }
     );
   }
 }

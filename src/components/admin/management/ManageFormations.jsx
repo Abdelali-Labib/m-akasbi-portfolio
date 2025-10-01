@@ -19,7 +19,7 @@ const ManageFormations = () => {
 
   const fetchFormations = async () => {
     try {
-      const response = await fetch('/api/admin/formations');
+      const response = await fetch('/api/admin/formations', { cache: 'no-store' });
       if (!response.ok) throw new Error('Failed to fetch formations');
       const result = await response.json();
       const data = result.data || result; // Handle both response formats

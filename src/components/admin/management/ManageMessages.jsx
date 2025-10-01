@@ -59,7 +59,7 @@ const ManageMessages = () => {
       setError(null);
       setLoading(true);
       
-      const response = await fetch('/api/admin/messages');
+      const response = await fetch('/api/admin/messages', { cache: 'no-store' });
       const result = await response.json();
       
       if (result.success) {

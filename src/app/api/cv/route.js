@@ -1,6 +1,7 @@
 import FirestoreService from "@/lib/firestore-service";
 import { NextResponse } from "next/server";
 import { headers } from 'next/headers';
+export const dynamic = 'force-dynamic';
 
 export async function GET(req) {
   try {
@@ -12,7 +13,7 @@ export async function GET(req) {
     if (!cvPath) {
       return new NextResponse(JSON.stringify({ error: "CV path not found in database." }), {
         status: 404,
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", 'Cache-Control': 'no-store' },
       });
     }
 
@@ -23,7 +24,7 @@ export async function GET(req) {
     if (!fileResponse.ok) {
       return new NextResponse(JSON.stringify({ error: "Failed to fetch CV from storage." }), {
         status: fileResponse.status,
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", 'Cache-Control': 'no-store' },
       });
     }
 
@@ -36,13 +37,13 @@ export async function GET(req) {
 
     return new NextResponse(fileBuffer, {
       status: 200,
-      headers: responseHeaders,
+      headers: new Headers({ ...Object.fromEntries(responseHeaders), 'Cache-Control': 'no-store' }),
     });
 
   } catch (error) {
     return new NextResponse(JSON.stringify({ error: "An internal server error occurred." }), {
       status: 500,
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", 'Cache-Control': 'no-store' },
     });
   }
 }

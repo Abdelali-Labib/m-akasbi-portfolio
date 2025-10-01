@@ -1,4 +1,5 @@
 import { dbAdmin } from '@/lib/firebase-admin';
+export const dynamic = 'force-dynamic';
 
 export async function GET() {
   try {
@@ -11,10 +12,10 @@ export async function GET() {
       messages.push({ id: doc.id, ...doc.data() });
     });
     
-    return Response.json({ success: true, data: messages });
+    return Response.json({ success: true, data: messages }, { headers: { 'Cache-Control': 'no-store' } });
   } catch (error) {
     
-    return Response.json({ success: false, error: error.message }, { status: 500 });
+    return Response.json({ success: false, error: error.message }, { status: 500, headers: { 'Cache-Control': 'no-store' } });
   }
 }
 
@@ -26,10 +27,10 @@ export async function PUT(request) {
       updatedAt: new Date()
     });
     
-    return Response.json({ success: true });
+    return Response.json({ success: true }, { headers: { 'Cache-Control': 'no-store' } });
   } catch (error) {
     
-    return Response.json({ success: false, error: error.message }, { status: 500 });
+    return Response.json({ success: false, error: error.message }, { status: 500, headers: { 'Cache-Control': 'no-store' } });
   }
 }
 
@@ -43,9 +44,9 @@ export async function DELETE(request) {
     }
     
     await dbAdmin.collection('messages').doc(id).delete();
-    return Response.json({ success: true });
+    return Response.json({ success: true }, { headers: { 'Cache-Control': 'no-store' } });
   } catch (error) {
     
-    return Response.json({ success: false, error: error.message }, { status: 500 });
+    return Response.json({ success: false, error: error.message }, { status: 500, headers: { 'Cache-Control': 'no-store' } });
   }
 }

@@ -1,5 +1,7 @@
 import FirestoreService from '@/lib/firestore-service';
 import { dbAdmin } from '@/lib/firebase-admin';
+import { revalidatePath } from 'next/cache';
+export const dynamic = 'force-dynamic';
 
 // Utility function to serialize Firestore data
 function serializeFirestoreData(data) {
@@ -54,13 +56,13 @@ export async function GET() {
       data: formations,
       count: formations.length,
       message: formations.length === 0 ? 'No formations found in database' : `Found ${formations.length} formations`
-    });
+    }, { headers: { 'Cache-Control': 'no-store' } });
   } catch (error) {
     return Response.json({ 
       success: false, 
       error: error.message,
       details: process.env.NODE_ENV === 'development' ? error.stack : undefined
-    }, { status: 500 });
+    }, { status: 500, headers: { 'Cache-Control': 'no-store' } });
   }
 }
 
@@ -72,7 +74,7 @@ export async function POST(request) {
       createdAt: new Date(),
       updatedAt: new Date()
     });
-    
+    revalidatePath('/formations');
     return Response.json({ success: true, id: docRef.id });
   } catch (error) {
     return Response.json({ success: false, error: error.message }, { status: 500 });
@@ -86,7 +88,7 @@ export async function PUT(request) {
       ...data,
       updatedAt: new Date()
     });
-    
+    revalidatePath('/formations');
     return Response.json({ success: true });
   } catch (error) {
     return Response.json({ success: false, error: error.message }, { status: 500 });
@@ -103,6 +105,7 @@ export async function DELETE(request) {
     }
     
     await dbAdmin.collection('formations').doc(id).delete();
+    revalidatePath('/formations');
     return Response.json({ success: true });
   } catch (error) {
     return Response.json({ success: false, error: error.message }, { status: 500 });

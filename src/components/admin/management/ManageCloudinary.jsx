@@ -75,7 +75,7 @@ const ManageCloudinary = () => {
   const fetchFiles = async () => {
     try {
       setLoading(true);
-      const response = await fetch('/api/admin/cloudinary');
+      const response = await fetch('/api/admin/cloudinary', { cache: 'no-store' });
       const data = await response.json();
       
       if (response.ok) {

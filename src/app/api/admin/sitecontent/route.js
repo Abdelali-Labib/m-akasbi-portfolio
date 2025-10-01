@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server';
 import { dbAdmin as db } from '@/lib/firebase-admin';
+import { revalidatePath } from 'next/cache';
+export const dynamic = 'force-dynamic';
 
 /**
  * GET: Returns all siteContent documents.
@@ -13,12 +15,12 @@ export async function GET() {
       documents[doc.id] = doc.data();
     });
 
-    return NextResponse.json({ documents });
+    return NextResponse.json({ documents }, { headers: { 'Cache-Control': 'no-store' } });
   } catch (error) {
     
     return NextResponse.json(
       { error: 'Erreur lors du chargement des documents' },
-      { status: 500 }
+      { status: 500, headers: { 'Cache-Control': 'no-store' } }
     );
   }
 }
@@ -44,17 +46,23 @@ export async function PUT(request) {
     };
 
     await db.collection('siteContent').doc(docId).set(documentData, { merge: true });
+    revalidatePath('/accueil');
+    revalidatePath('/contact');
+    revalidatePath('/projets');
+    revalidatePath('/competences');
+    revalidatePath('/experiences');
+    revalidatePath('/formations');
 
     return NextResponse.json({ 
       message: 'Document sauvegardé avec succès',
       docId,
       data: documentData
-    });
+    }, { headers: { 'Cache-Control': 'no-store' } });
   } catch (error) {
     
     return NextResponse.json(
       { error: 'Erreur lors de la sauvegarde' },
-      { status: 500 }
+      { status: 500, headers: { 'Cache-Control': 'no-store' } }
     );
   }
 }
@@ -74,15 +82,21 @@ export async function DELETE(request) {
     }
 
     await db.collection('siteContent').doc(docId).delete();
+    revalidatePath('/accueil');
+    revalidatePath('/contact');
+    revalidatePath('/projets');
+    revalidatePath('/competences');
+    revalidatePath('/experiences');
+    revalidatePath('/formations');
 
     return NextResponse.json({ 
       message: 'Document supprimé avec succès',
       docId
-    });
+    }, { headers: { 'Cache-Control': 'no-store' } });
   } catch (error) {
     return NextResponse.json(
       { error: 'Erreur lors de la suppression' },
-      { status: 500 }
+      { status: 500, headers: { 'Cache-Control': 'no-store' } }
     );
   }
 }

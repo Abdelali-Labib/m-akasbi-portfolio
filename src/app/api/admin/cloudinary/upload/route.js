@@ -1,4 +1,5 @@
 import { v2 as cloudinary } from 'cloudinary';
+export const dynamic = 'force-dynamic';
 
 // Configure Cloudinary
 cloudinary.config({
@@ -44,12 +45,12 @@ export async function POST(request) {
       url: uploadResult.secure_url,
       width: uploadResult.width,
       height: uploadResult.height,
-    });
+    }, { headers: { 'Cache-Control': 'no-store' } });
 
   } catch (error) {
     return Response.json({ 
       success: false,
       error: error.message || 'Upload failed' 
-    }, { status: 500 });
+    }, { status: 500, headers: { 'Cache-Control': 'no-store' } });
   }
 }

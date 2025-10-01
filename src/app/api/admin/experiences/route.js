@@ -1,5 +1,7 @@
 import FirestoreService from '@/lib/firestore-service';
 import { dbAdmin } from '@/lib/firebase-admin';
+import { revalidatePath } from 'next/cache';
+export const dynamic = 'force-dynamic';
 
 export async function GET() {
   try {
@@ -32,13 +34,13 @@ export async function GET() {
       data: experiences,
       count: experiences.length,
       message: experiences.length === 0 ? 'No experiences found in database' : `Found ${experiences.length} experiences`
-    });
+    }, { headers: { 'Cache-Control': 'no-store' } });
   } catch (error) {
     return Response.json({ 
       success: false, 
       error: error.message,
       details: process.env.NODE_ENV === 'development' ? error.stack : undefined
-    }, { status: 500 });
+    }, { status: 500, headers: { 'Cache-Control': 'no-store' } });
   }
 }
 
@@ -51,7 +53,7 @@ export async function POST(request) {
       createdAt: new Date(),
       updatedAt: new Date()
     });
-    
+    revalidatePath('/experiences');
     return Response.json({ success: true, id: docRef.id });
   } catch (error) {
     return Response.json({ success: false, error: error.message }, { status: 500 });
@@ -66,7 +68,7 @@ export async function PUT(request) {
       ...data,
       updatedAt: new Date()
     });
-    
+    revalidatePath('/experiences');
     return Response.json({ success: true });
   } catch (error) {
     return Response.json({ success: false, error: error.message }, { status: 500 });
@@ -83,6 +85,7 @@ export async function DELETE(request) {
     }
     
     await dbAdmin.collection('experiences').doc(id).delete();
+    revalidatePath('/experiences');
     return Response.json({ success: true });
   } catch (error) {
     

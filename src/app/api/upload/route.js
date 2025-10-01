@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { v2 as cloudinary } from 'cloudinary';
+export const dynamic = 'force-dynamic';
 
 // Configure Cloudinary from environment variables
 cloudinary.config({
@@ -18,14 +19,14 @@ export async function POST(request) {
   try {
     // Check Cloudinary configuration
     if (!process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || !process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY || !process.env.CLOUDINARY_API_SECRET) {
-      return NextResponse.json({ error: 'Cloudinary configuration missing' }, { status: 500 });
+      return NextResponse.json({ error: 'Cloudinary configuration missing' }, { status: 500, headers: { 'Cache-Control': 'no-store' } });
     }
 
     const formData = await request.formData();
     const file = formData.get('file');
 
     if (!file) {
-      return NextResponse.json({ error: 'No file uploaded.' }, { status: 400 });
+      return NextResponse.json({ error: 'No file uploaded.' }, { status: 400, headers: { 'Cache-Control': 'no-store' } });
     }
 
     // Convert the file to a buffer
@@ -68,9 +69,9 @@ export async function POST(request) {
       url: uploadResult.secure_url,
       public_id: uploadResult.public_id,
       original_filename: originalName,
-    });
+    }, { headers: { 'Cache-Control': 'no-store' } });
 
   } catch (error) {
-    return NextResponse.json({ error: 'Something went wrong during file upload.' }, { status: 500 });
+    return NextResponse.json({ error: 'Something went wrong during file upload.' }, { status: 500, headers: { 'Cache-Control': 'no-store' } });
   }
 }

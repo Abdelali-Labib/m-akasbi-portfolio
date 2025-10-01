@@ -55,7 +55,7 @@ const ManageProjects = () => {
 
   const fetchProjects = async () => {
     try {
-      const response = await fetch('/api/admin/projects');
+      const response = await fetch('/api/admin/projects', { cache: 'no-store' });
       const result = await response.json();
       
       if (result.success) {

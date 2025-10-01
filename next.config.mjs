@@ -70,11 +70,11 @@ const nextConfig = {
         ],
       },
       {
-        source: '/:all*',
+        source: '/api/:path*',
         headers: [
           {
             key: 'Cache-Control',
-            value: 'public, max-age=3600',
+            value: 'no-store',
           },
         ],
       },

@@ -1,3 +1,4 @@
+export const revalidate = 60;
 import FirestoreService from "@/lib/firestore-service";
 import ContactClient from "./ContactClient";
 

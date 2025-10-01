@@ -19,13 +19,17 @@ export async function GET(request) {
 
     const snap = await dbAdmin.collection('analytics').doc('daily_stats').get();
     const agg = snap.exists ? snap.data() : {};
-    // Calculate total visitors from daily_visitors
-    const totalVisitors = Object.values(agg.daily_visitors || {}).reduce((sum, v) => sum + (Array.isArray(v) ? v.length : 0), 0);
+    // Calculate total visitors from daily_visitors (support numbers and legacy arrays)
+    const totalVisitors = Object.values(agg.daily_visitors || {}).reduce((sum, v) => {
+      if (Array.isArray(v)) return sum + v.length;
+      const n = Number(v || 0);
+      return sum + (isNaN(n) ? 0 : n);
+    }, 0);
     
     // Process daily visitors data
     const visitorsByDay = Object.entries(agg.daily_visitors || {}).map(([date, visitors]) => ({
       date,
-      visitors: Array.isArray(visitors) ? visitors.length : 0
+      visitors: Array.isArray(visitors) ? visitors.length : (Number(visitors || 0) || 0)
     }));
 
     // Process CV downloads by date
